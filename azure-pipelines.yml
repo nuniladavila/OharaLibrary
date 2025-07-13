@@ -1,0 +1,40 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    cd frontend
+    npm install
+    npm run build
+  displayName: 'Build React Frontend'
+
+- script: |
+    cd backend
+    npm install
+    mkdir -p ../frontend/dist
+    mkdir -p public
+    cp -r ../frontend/dist/* public/
+  displayName: 'Prepare Backend and Copy Frontend Build'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: 'backend'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+    replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '<your-azure-subscription>'
+    appType: 'webApp'
+    appName: '<your-app-service-name>'
+    package: '$(Build.ArtifactStagingDirectory)/app.zip'

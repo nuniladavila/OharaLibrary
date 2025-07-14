@@ -8,10 +8,10 @@ async function connectToAzureSql() {
     const tokenResponse = await credential.getToken('https://database.windows.net/.default');
 
     const config = {
-      server: process.env.AZURE_SQL_SERVER || 'your-server.database.windows.net',
-      database: process.env.AZURE_SQL_DATABASE || 'your-database',
+      server: process.env.AZURE_SQL_SERVER,
+      database: process.env.AZURE_SQL_DATABASE,
       authentication: {
-        type: 'azure-active-directory-access-token',
+        type: "azure-active-directory-access-token",
         options: {
           token: tokenResponse.token
         }
@@ -30,8 +30,17 @@ async function connectToAzureSql() {
 }
 
 async function getBooksFromDb() {
-  // Return mock list of 5 books
+  try {
+    // Ensure connection is established
+    await connectToAzureSql();
 
+    // Query all books
+    const result = await sql.query('SELECT * FROM [dbo].[Books]');
+    return result.recordset;
+  } catch (err) {
+    console.error('Azure SQL query error:', err);
+    return null;
+  }
 }
 
 module.exports = { getBooksFromDb, connectToAzureSql };

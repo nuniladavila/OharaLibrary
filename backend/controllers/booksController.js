@@ -12,13 +12,14 @@ let books = [
 ];
 
 // GET /api/books
-router.get('/', async (req, res) => {
-  if (process.env.AZURE_SQL_USER && process.env.AZURE_SQL_PASSWORD && process.env.AZURE_SQL_SERVER && process.env.AZURE_SQL_DATABASE) {
-    const dbBooks = await getBooksFromDb();
-    if (dbBooks && dbBooks.length > 0) {
-      return res.json(dbBooks);
-    }
+router.get('/', async (req, res) => {    
+  const dbBooks = await getBooksFromDb();
+
+  console.log("Books from db:", dbBooks);
+  if (dbBooks && dbBooks.length > 0) {
+    return res.json(dbBooks);
   }
+
   res.json(books);
 });
 

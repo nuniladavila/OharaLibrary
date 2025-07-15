@@ -14,18 +14,13 @@ let books = [
 // GET /api/books
 router.get('/', async (req, res) => {    
   try {
-    const dbBooks = await getBooksFromDb();
-    if (Array.isArray(dbBooks)) {
-      return res.json(dbBooks);
-    } else if (dbBooks && dbBooks instanceof Error) {
-      // If dbBooks is an Error object, return error details
-      return res.status(500).json({ error: dbBooks.message || 'Database error', details: dbBooks });
-    } else if (dbBooks && dbBooks.error) {
-      // If dbBooks is an error object
-      return res.status(500).json(dbBooks);
+    const response = await getBooksFromDb();
+    if (Array.isArray(response)) {
+      return res.json(response);
+    } else {
+      // If response is an Error object, return error details
+      return res.status(500).json(response);
     }
-    // Fallback to mock books if no DB books
-    res.json(books);
   } catch (err) {
     console.error('Error in GET /api/books:', err);
     res.status(500).json({ error: err.message || 'Unknown error', details: err });

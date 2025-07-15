@@ -26,31 +26,44 @@ async function connectToAzureSql() {
     await sql.connect(config);
     return true;
   } catch (err) {
-    console.log("Error connecting to Azure SQL", err);
-    console.warn("Error connecting to Azure SQL", err);
-    console.error('Azure SQL connection error:', err);
-    return false;
+    if (err.stack) console.error('Stack:', err.stack);
+    if (err.code) console.error('Code:', err.code);
+    if (err.name) console.error('Name:', err.name);
+    return {
+      error: err.message || 'Azure SQL connection error',
+      stack: err.stack,
+      code: err.code,
+      name: err.name,
+      details: err
+    };
   }
 }
 
 async function getBooksFromDb() {
   try {
-    console.log("Fetching books from Azure SQL...");
-    // Ensure connection is established
-    const connected = await connectToAzureSql();
-    if (!connected) {
-      throw new Error('Failed to connect to Azure SQL');
+    const connectionResult = await connectToAzureSql();
+    if (connectionResult !== true) {
+      // If connectToAzureSql returned an error object, return it
+      return connectionResult;
     }
+
     console.log("Connected to Azure SQL, querying books...");
     // Query all books
     const result = await sql.query('SELECT * FROM [dbo].[Books]');
     return result.recordset;
+
   } catch (err) {
-    console.log("Error querying books from Azure SQL", err);
-    console.warn("Error querying books from Azure SQL", err);
-    console.error('Azure SQL query error:', err);
-    // Return error object for controller to handle
-    return { error: err.message || 'Azure SQL query error', details: err };
+    if (err.stack) console.error('Stack:', err.stack);
+    if (err.code) console.error('Code:', err.code);
+    if (err.name) console.error('Name:', err.name);
+    // Return full error object
+    return {
+      error: err.message || 'Azure SQL query error',
+      stack: err.stack,
+      code: err.code,
+      name: err.name,
+      details: err
+    };
   }
 }
 

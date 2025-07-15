@@ -5,12 +5,10 @@ function App() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/books')
+    fetch('/api/books')
       .then(res => res.json())
       .then(data => {
-
         console.log("Fetched books:", data);
-        
         // Add a thumbnail property to each book (mock)
         const withThumbnails = data.map(book => ({
           ...book,

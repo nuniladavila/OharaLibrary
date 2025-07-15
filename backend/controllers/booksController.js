@@ -13,14 +13,23 @@ let books = [
 
 // GET /api/books
 router.get('/', async (req, res) => {    
-  const dbBooks = await getBooksFromDb();
-
-  console.log("Books from db:", dbBooks);
-  if (dbBooks && dbBooks.length > 0) {
-    return res.json(dbBooks);
+  try {
+    const dbBooks = await getBooksFromDb();
+    if (Array.isArray(dbBooks)) {
+      return res.json(dbBooks);
+    } else if (dbBooks && dbBooks instanceof Error) {
+      // If dbBooks is an Error object, return error details
+      return res.status(500).json({ error: dbBooks.message || 'Database error', details: dbBooks });
+    } else if (dbBooks && dbBooks.error) {
+      // If dbBooks is an error object
+      return res.status(500).json(dbBooks);
+    }
+    // Fallback to mock books if no DB books
+    res.json(books);
+  } catch (err) {
+    console.error('Error in GET /api/books:', err);
+    res.status(500).json({ error: err.message || 'Unknown error', details: err });
   }
-
-  res.json(books);
 });
 
 // POST /api/books

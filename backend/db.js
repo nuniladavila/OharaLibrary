@@ -31,6 +31,7 @@ async function connectToAzureSql() {
 
 async function getBooksFromDb() {
   try {
+    console.log("Fetching books from Azure SQL...");
     // Ensure connection is established
     await connectToAzureSql();
 

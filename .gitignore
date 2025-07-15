@@ -6,6 +6,7 @@ build/
 
 backend/node_modules/
 backend/dist/
+backend/public/
 backend/.env
 
 frontend/node_modules/

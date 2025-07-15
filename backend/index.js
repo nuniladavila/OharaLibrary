@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// Serve React frontend build
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve React frontend build from backend/public
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Books controller router
 const booksRouter = require('./controllers/booksController');
@@ -16,7 +16,7 @@ app.use('/api/books', booksRouter);
 
 // Fallback to index.html for client-side routing
 app.get(/^((?!api).)*$/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 

@@ -36,8 +36,8 @@ jobs:
 
       - name: Copy frontend build to backend
         run: |
-          rm -rf backend/build
-          cp -r frontend/build backend/
+          rm -rf backend/dist
+          cp -r frontend/dist backend/
 
       - name: Zip artifact for deployment
         run: zip -r release.zip backend/*

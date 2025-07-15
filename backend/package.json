@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "cd ../frontend && npm run build && cd .. && xcopy /E /I /Y frontend\\dist\\* backend\\public\\ && cd backend && node index.js && start http://localhost:4000"
+    "start": "node index.js",
+    "dev": "cd ../frontend && npm run build && cd .. && xcopy /E /I /Y frontend\\dist\\* backend\\public\\ && cd backend && node index.js && start http://localhost:4000"
   },
   "dependencies": {
     "cors": "^2.8.5",

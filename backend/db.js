@@ -1,70 +1,35 @@
-// Azure SQL connection setup
-const sql = require('mssql');
-const { DefaultAzureCredential } = require('@azure/identity');
+// SQLite connection setup
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-async function connectToAzureSql() {
-  try {
-    const credential = new DefaultAzureCredential();
-    const tokenResponse = await credential.getToken('https://database.windows.net/.default');
+const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, 'OharaLibrary_SQLite.db');
+let db;
 
-    const config = {
-      server: process.env.AZURE_SQL_SERVER,
-      database: process.env.AZURE_SQL_DATABASE,
-      authentication: {
-        type: "azure-active-directory-access-token",
-        options: {
-          token: tokenResponse.token
-        }
-      },
-      options: {
-        encrypt: true
+function connectToSqlite() {
+  if (!db) {
+    db = new sqlite3.Database(dbPath, (err) => {
+      if (err) {
+        console.error('SQLite connection error:', err);
+      } else {
+        console.log('Connected to SQLite database at', dbPath);
       }
-    };
-
-    console.log("Was able to connect to Azure SQL");
-
-    await sql.connect(config);
-    return true;
-  } catch (err) {
-    if (err.stack) console.error('Stack:', err.stack);
-    if (err.code) console.error('Code:', err.code);
-    if (err.name) console.error('Name:', err.name);
-    return {
-      error: err.message || 'Azure SQL connection error',
-      stack: err.stack,
-      code: err.code,
-      name: err.name,
-      details: err
-    };
+    });
   }
+  return db;
 }
 
 async function getBooksFromDb() {
-  try {
-    const connectionResult = await connectToAzureSql();
-    if (connectionResult !== true) {
-      // If connectToAzureSql returned an error object, return it
-      return connectionResult;
-    }
-
-    console.log("Connected to Azure SQL, querying books...");
-    // Query all books
-    const result = await sql.query('SELECT * FROM [dbo].[Books]');
-    return result.recordset;
-
-  } catch (err) {
-    if (err.stack) console.error('Stack:', err.stack);
-    if (err.code) console.error('Code:', err.code);
-    if (err.name) console.error('Name:', err.name);
-    // Return full error object
-    return {
-      error: err.message || 'Azure SQL query error',
-      stack: err.stack,
-      code: err.code,
-      name: err.name,
-      details: err
-    };
-  }
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.all('SELECT * FROM Books', [], (err, rows) => {
+      if (err) {
+        console.error('SQLite query error:', err);
+        resolve({ error: err.message || 'SQLite query error', details: err });
+      } else {
+        resolve(rows);
+      }
+    });
+  });
 }
 
-module.exports = { getBooksFromDb, connectToAzureSql };
+module.exports = { getBooksFromDb, connectToSqlite };

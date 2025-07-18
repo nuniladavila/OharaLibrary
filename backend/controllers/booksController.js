@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getBooksFromDb } = require('../db');
+const { getBooksFromDb } = require('../services/db');
 
 // Mock book inventory
 let books = [

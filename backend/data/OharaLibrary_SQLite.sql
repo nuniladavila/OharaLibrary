@@ -16,8 +16,9 @@ CREATE TABLE Books(
 		Notes TEXT,
 		Read INTEGER,
 		DateAdded TEXT,
-		DateAcquired TEXT
+		DateAcquired TEXT,
+		ImageLink TEXT
 	);
-INSERT INTO Books VALUES(1,'The Song of Achilles','Madeline Miller','','Fiction','Fiction','Ecco','2012-08-28','','English','English General Fiction','9780062060624','',0,'2025-07-16T23:08:21-07:00','2025-07-16T23:08:21-07:00');
+INSERT INTO Books VALUES(1,'The Song of Achilles','Madeline Miller','','Fiction','Fiction','Ecco','2012-08-28','','English','English General Fiction','9780062060624','',0,'2025-07-16T23:08:21-07:00','2025-07-16T23:08:21-07:00','');
 INSERT INTO sqlite_sequence VALUES('Books',1);
 COMMIT;

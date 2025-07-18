@@ -2,7 +2,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, 'OharaLibrary_SQLite.db');
+const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, '../data/OharaLibrary_SQLite.db');
 let db;
 
 function connectToSqlite() {

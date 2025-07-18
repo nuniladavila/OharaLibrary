@@ -32,4 +32,23 @@ async function getBooksFromDb() {
   });
 }
 
-module.exports = { getBooksFromDb, connectToSqlite };
+
+function addBookToDb({ BookTitle, Author, PublishedDate, ISBN }) {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.run(
+      'INSERT INTO Books (BookTitle, Author, PublishedDate, ISBN) VALUES (?, ?, ?, ?)',
+      [BookTitle, Author, PublishedDate, ISBN],
+      function(err) {
+        if (err) {
+          console.error('Error inserting book:', err);
+          reject(err);
+        } else {
+          resolve({ id: this.lastID, BookTitle, Author, PublishedDate, ISBN });
+        }
+      }
+    );
+  });
+}
+
+module.exports = { getBooksFromDb, connectToSqlite, addBookToDb };

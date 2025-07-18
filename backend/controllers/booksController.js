@@ -1,20 +1,13 @@
+import { getBooks, addBookByISBN } from '../services/book-service.js';
+
 const express = require('express');
 const router = express.Router();
-const { getBooksFromDb } = require('../services/db');
-
-// Mock book inventory
-let books = [
-  { id: 1, title: 'The Great Goat', author: 'F. Scott Fitzgerald', year: 1925 },
-  { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee', year: 1960 },
-  { id: 3, title: '1984', author: 'George Orwell', year: 1949 },
-  { id: 4, title: 'Pride and Prejudice', author: 'Jane Austen', year: 1813 },
-  { id: 5, title: 'Moby-Dick', author: 'Herman Melville', year: 1851 }
-];
+const BOOK_ADD_PASSWORD = process.env.BOOK_ADD_PASSWORD;
 
 // GET /api/books
 router.get('/', async (req, res) => {    
   try {
-    const response = await getBooksFromDb();
+    const response = await getBooks();
     if (Array.isArray(response)) {
       return res.json(response);
     } else {
@@ -27,18 +20,28 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/books
+
+// POST /api/books (password protected)
 router.post('/', (req, res) => {
-  const { title, author, year } = req.body;
-  const newBook = {
-    id: books.length + 1,
-    title,
-    author,
-    year
-  };
-  books.push(newBook);
-  res.status(201).json(newBook);
+  const { password, ...bookData } = req.body;
+
+  if (!password || password !== BOOK_ADD_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid password' });
+  }
+
+  const { ISBN, category, shelfLocation } = bookData;
+  if (!ISBN || !category || !shelfLocation) {
+    return res.status(400).json({ error: 'Missing required book fields' });
+  }
+
+  addBookByISBN(bookData)
+    .then(result => res.status(201).json(result))
+    .catch(err => {
+      console.error('Error inserting book:', err);
+      res.status(500).json({ error: 'Failed to add book', details: err.message });
+    });
 });
+
 
 // PUT /api/books/:id
 router.put('/:id', (req, res) => {

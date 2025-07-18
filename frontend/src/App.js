@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import logo from '../assets/librarynicolilac.png';
 
 function App() {
   const [books, setBooks] = useState([]);
@@ -12,7 +13,8 @@ function App() {
         // Add a thumbnail property to each book (mock)
         const withThumbnails = data.map(book => ({
           ...book,
-          thumbnail: `https://covers.openlibrary.org/b/isbn/${book.ISBN}-M.jpg`,
+          thumbnail: book.imageLink,
+          // thumbnail: `https://covers.openlibrary.org/b/isbn/${book.ISBN}-M.jpg`,
         }));
         setBooks(withThumbnails);
       })
@@ -52,7 +54,7 @@ function App() {
       }} />
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-          <img src="https://img.icons8.com/fluency/96/000000/books.png" alt="Ohara Library Logo" style={{ height: '56px', width: '56px', borderRadius: '12px', boxShadow: '0 2px 8px coral', background: '#fff' }} />
+          <img src={logo} alt="Ohara Library Logo" style={{ height: '56px', width: '56px', borderRadius: '12px', boxShadow: '0 2px 8px coral', background: '#fff' }} />
           <h1 style={{ fontSize: '2.5rem', color: '#fff', margin: 0, textShadow: '2px 2px 8px coral' }}>Welcome to Ohara Library</h1>
         </div>
         <p style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 'bold', textShadow: '1px 1px 6px coral' }}>Explore our personal book inventory</p>

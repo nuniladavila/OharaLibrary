@@ -74,4 +74,18 @@ export function addBookToDb(book) {
   });
 }
 
-export { connectToSqlite };
+export function deleteBookFromDb(id) {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.run(`DELETE FROM Books WHERE id = ?`, [id], function(err) {
+      if (err) {
+        console.error('Error deleting book:', err);
+        reject(err);
+      } else {
+        resolve({ changes: this.changes });
+      }
+    });
+  });
+}
+
+export { connectToSqlite, deleteBookFromDb, getBooksFromDb, addBookToDb };

@@ -1,4 +1,4 @@
-import { getBooks, addBookByISBN } from '../services/book-service.js';
+import { getBooks, addBookByISBN, deleteBookById } from '../services/book-service.js';
 import express from 'express';
 
 const router = express.Router();
@@ -58,12 +58,23 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/books/:id
-router.delete('/:id', (req, res) => {
+
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const index = books.findIndex(b => b.id === parseInt(id));
-  if (index === -1) return res.status(404).json({ error: 'Book not found' });
-  const deleted = books.splice(index, 1);
-  res.json(deleted[0]);
+  if (!id) {
+    return res.status(400).json({ error: 'Book id is required' });
+  }
+  try {
+    const result = await deleteBookById(id);
+    if (result && result.changes > 0) {
+      res.json({ success: true, id });
+    } else {
+      res.status(404).json({ error: 'Book not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting book:', err);
+    res.status(500).json({ error: err.message || 'Failed to delete book' });
+  }
 });
 
 export default router;

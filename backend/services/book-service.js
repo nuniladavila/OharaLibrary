@@ -40,4 +40,14 @@ async function getBooks() {
   }
 }
 
-export { addBookByISBN, getBooks };
+async function deleteBookById(id) {
+  try {
+    const result = await deleteBookFromDb(id);
+    return result;
+  } catch (error) {
+    console.error('Error deleting book from database:', error);
+    throw error;
+  }
+}
+
+export { addBookByISBN, getBooks, deleteBookById };

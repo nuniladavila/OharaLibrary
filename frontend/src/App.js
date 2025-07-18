@@ -2,13 +2,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
-import AddBook from './AddBook';
+import AdminPanel from './AdminPanel';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/admin-panel" element={<AddBook />} />
+      <Route path="/admin-panel" element={<AdminPanel />} />
     </Routes>
   );
 }

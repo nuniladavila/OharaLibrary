@@ -47,4 +47,4 @@ class GoogleBook {
   }
 }
 
-module.exports = GoogleBook;
+export default GoogleBook;

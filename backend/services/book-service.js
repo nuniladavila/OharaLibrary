@@ -1,8 +1,8 @@
 
-import { getBookInfoByISBN } from '../clients/google-client';
-import { getBooksFromDb, addBookToDb } from '../clients/db';
-import GoogleBook from '../models/googleBook';
-import AddBookRequest from '../models/addBookRequest';
+import { getBookInfoByISBN } from '../clients/google-client.js';
+import { getBooksFromDb, addBookToDb } from '../clients/db.js';
+import AddBookRequest from '../models/AddBookRequest.js';
+import OharaBook from '../models/OharaBook.js';
 
 /**
  * Fetch book information from Google Books API by ISBN
@@ -15,13 +15,15 @@ async function addBookByISBN(bookData) {
 
     if (!bookInfo) {
       console.error('Book not found');
-      return null;
+      throw new Error('Book not found');
     }
 
     const oharaBookToAdd = new OharaBook(bookInfo, bookData);
 
+    console.log('Adding book to database:', oharaBookToAdd);
+
     return await addBookToDb(oharaBookToAdd);
-    
+
   } catch (error) {
     console.error('Error fetching book info:', error);
     throw error;
@@ -38,4 +40,4 @@ async function getBooks() {
   }
 }
 
-module.exports = { fetchBookInfo, getBooks };
+export { addBookByISBN, getBooks };

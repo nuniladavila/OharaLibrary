@@ -53,43 +53,6 @@ class OharaBook {
     this.ImageLink = googleBook.imageLinks.thumbnail;
   }
 
-  constructor({
-    Id,
-    BookTitle,
-    Author,
-    Editor,
-    Category,
-    SubCategory,
-    Publisher,
-    PublishedDate,
-    Edition,
-    Language,
-    ShelfLocation,
-    ISBN,
-    Notes,
-    Read,
-    DateAdded,
-    DateAcquired,
-    ImageLink
-  }) {
-    this.Id = Id;
-    this.BookTitle = BookTitle;
-    this.Author = Author;
-    this.Editor = Editor;
-    this.Category = Category;
-    this.SubCategory = SubCategory;
-    this.Publisher = Publisher;
-    this.PublishedDate = PublishedDate;
-    this.Edition = Edition;
-    this.Language = Language;
-    this.ShelfLocation = ShelfLocation;
-    this.ISBN = ISBN;
-    this.Notes = Notes;
-    this.Read = Read;
-    this.DateAdded = DateAdded;
-    this.DateAcquired = DateAcquired;
-    this.ImageLink = ImageLink;
-  }
 }
 
-module.exports = OharaBook;
+export default OharaBook;

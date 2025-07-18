@@ -1,7 +1,12 @@
-// SQLite connection setup
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 
+// SQLite connection setup (ESM)
+import sqlite3pkg from 'sqlite3';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const sqlite3 = sqlite3pkg.verbose();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, '../data/OharaLibrary_SQLite.db');
 let db;
 
@@ -18,7 +23,7 @@ function connectToSqlite() {
   return db;
 }
 
-async function getBooksFromDb() {
+export async function getBooksFromDb() {
   return new Promise((resolve, reject) => {
     const db = connectToSqlite();
     db.all('SELECT * FROM Books', [], (err, rows) => {
@@ -32,23 +37,41 @@ async function getBooksFromDb() {
   });
 }
 
-
-function addBookToDb({ BookTitle, Author, PublishedDate, ISBN }) {
+export function addBookToDb(book) {
   return new Promise((resolve, reject) => {
     const db = connectToSqlite();
     db.run(
-      'INSERT INTO Books (BookTitle, Author, PublishedDate, ISBN) VALUES (?, ?, ?, ?)',
-      [BookTitle, Author, PublishedDate, ISBN],
+      `INSERT INTO Books (
+        BookTitle, Author, Editor, Category, SubCategory, Publisher, PublishedDate, Edition, Language, ShelfLocation, ISBN, Notes, Read, DateAdded, DateAcquired, ImageLink
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        book.BookTitle,
+        book.Author,
+        book.Editor,
+        book.Category,
+        book.SubCategory,
+        book.Publisher,
+        book.PublishedDate,
+        book.Edition,
+        book.Language,
+        book.ShelfLocation,
+        book.ISBN,
+        book.Notes,
+        book.Read ? 1 : 0,
+        book.DateAdded,
+        book.DateAcquired,
+        book.ImageLink
+      ],
       function(err) {
         if (err) {
           console.error('Error inserting book:', err);
           reject(err);
         } else {
-          resolve({ id: this.lastID, BookTitle, Author, PublishedDate, ISBN });
+          resolve({ id: this.lastID, ...book });
         }
       }
     );
   });
 }
 
-module.exports = { getBooksFromDb, connectToSqlite, addBookToDb };
+export { connectToSqlite };

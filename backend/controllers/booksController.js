@@ -1,8 +1,7 @@
 import { getBooks, addBookByISBN } from '../services/book-service.js';
+import express from 'express';
 
-const express = require('express');
 const router = express.Router();
-const BOOK_ADD_PASSWORD = process.env.BOOK_ADD_PASSWORD;
 
 // GET /api/books
 router.get('/', async (req, res) => {    
@@ -24,21 +23,24 @@ router.get('/', async (req, res) => {
 // POST /api/books (password protected)
 router.post('/', (req, res) => {
   const { password, ...bookData } = req.body;
+  console.log("Received book data:", bookData);
 
-  if (!password || password !== BOOK_ADD_PASSWORD) {
+  if (!password || password !== process.env.ADMIN_PWD) {
     return res.status(401).json({ error: 'Unauthorized: Invalid password' });
   }
 
-  const { ISBN, category, shelfLocation } = bookData;
-  if (!ISBN || !category || !shelfLocation) {
+  const { isbn, category, shelfLocation } = bookData;
+  if (!isbn || !category || !shelfLocation) {
     return res.status(400).json({ error: 'Missing required book fields' });
   }
 
   addBookByISBN(bookData)
-    .then(result => res.status(201).json(result))
+    .then(result => {
+      res.status(201).json(result);
+    })
     .catch(err => {
       console.error('Error inserting book:', err);
-      res.status(500).json({ error: 'Failed to add book', details: err.message });
+      res.status(500).json({ error: err.message });
     });
 });
 
@@ -64,4 +66,4 @@ router.delete('/:id', (req, res) => {
   res.json(deleted[0]);
 });
 
-module.exports = router;
+export default router;

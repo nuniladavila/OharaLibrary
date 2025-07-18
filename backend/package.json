@@ -2,6 +2,7 @@
   "name": "ohara-library-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "cd ../frontend && npm run build && cd .. && xcopy /E /I /Y frontend\\dist\\* backend\\public\\ && cd backend && node index.js && start http://localhost:4000"
@@ -11,6 +12,7 @@
     "dotenv": "^17.2.0",
     "express": "^4.18.2",
     "mssql": "^10.0.1",
+    "node-fetch": "^3.3.2",
     "open": "^10.1.2",
     "sqlite3": "^5.1.7"
   }

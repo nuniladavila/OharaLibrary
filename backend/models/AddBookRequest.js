@@ -15,4 +15,4 @@ class AddBookRequest {
   }
 }
 
-module.exports = AddBookRequest;
+export default AddBookRequest;

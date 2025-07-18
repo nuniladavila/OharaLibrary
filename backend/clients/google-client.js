@@ -1,6 +1,6 @@
 
-const fetch = require('node-fetch');
-const GoogleBook = require('../models/googleBook');
+import fetch from 'node-fetch';
+import GoogleBook from '../models/GoogleBook.js';
 
 /**
  * Fetch book information from Google Books API by ISBN
@@ -21,4 +21,4 @@ async function getBookInfoByISBN(isbn) {
   return data.items[0].volumeInfo;
 }
 
-module.exports = { getBookInfoByISBN };
+export { getBookInfoByISBN };

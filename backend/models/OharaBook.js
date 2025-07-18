@@ -36,10 +36,10 @@ class OharaBook {
 
     this.Id = googleBook.id;
     this.BookTitle = googleBook.title;
-    this.Author = googleBook.authors.join(', ');
+    this.Author = googleBook?.authors?.join(', ');
     this.Editor = googleBook.publisher;
     this.Category = batchProps.category;
-    this.SubCategory = googleBook.categories.join(', ');
+    this.SubCategory = googleBook?.categories?.join(', ');
     this.Publisher = googleBook.publisher;
     this.PublishedDate = googleBook.publishedDate;
     this.Edition = '';

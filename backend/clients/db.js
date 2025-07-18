@@ -88,4 +88,4 @@ export function deleteBookFromDb(id) {
   });
 }
 
-export { connectToSqlite, deleteBookFromDb, getBooksFromDb, addBookToDb };
+export { connectToSqlite }

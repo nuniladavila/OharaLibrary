@@ -61,6 +61,12 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  const password = req.headers['x-admin-password'];
+
+  if (!password || password !== process.env.ADMIN_PWD) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid password' });
+  }
+
   if (!id) {
     return res.status(400).json({ error: 'Book id is required' });
   }

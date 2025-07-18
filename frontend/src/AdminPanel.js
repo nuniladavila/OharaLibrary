@@ -14,10 +14,13 @@ function DeleteBook() {
       setError('Please enter a book ID to delete.');
       return;
     }
+
+    const password = localStorage.getItem('ohara_admin_pwd') || '';
+
     try {
       const res = await fetch(`/api/books/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
       });
       if (!res.ok) {
         const data = await res.json();

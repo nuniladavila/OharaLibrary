@@ -1,6 +1,6 @@
 
 import { getBookInfoByISBN } from '../clients/google-client.js';
-import { getBooksFromDb, addBookToDb } from '../clients/db.js';
+import { getBooksFromDb, addBookToDb, deleteBookFromDb } from '../clients/db.js';
 import AddBookRequest from '../models/AddBookRequest.js';
 import OharaBook from '../models/OharaBook.js';
 

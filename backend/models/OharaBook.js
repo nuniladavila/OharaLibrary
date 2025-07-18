@@ -50,7 +50,7 @@ class OharaBook {
     this.Read = batchProps.read || false;
     this.DateAdded = new Date();
     this.DateAcquired = new Date();
-    this.ImageLink = googleBook.imageLinks.thumbnail;
+    this.ImageLink = googleBook?.imageLinks?.thumbnail;
   }
 
 }

@@ -24,7 +24,6 @@ const BookShelf = ({ books = [], COLORS}) => {
     function updateBooksPerShelf() {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.offsetWidth;
-    //   const margin = 5;
       const totalBookWidth = BOOK_SHELF_CONSTANTS.maxBookWidth * 0.9;
       let count = Math.floor(containerWidth / totalBookWidth);
         console.log("Calculated books per shelf:", count);
@@ -46,7 +45,22 @@ const BookShelf = ({ books = [], COLORS}) => {
   const defaultShelfHeight = 170;
 
   return (
-    <div ref={containerRef} style={{ width: '100%', maxWidth: 1200, margin: '0 auto', paddingBottom: 40 }}>
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        maxWidth: 1200,
+        margin: '0 auto',
+        paddingBottom: 40,
+        borderLeft: '16px solid #8B5C2A',
+        borderRight: '16px solid #8B5C2A',
+        borderTop: '24px solid #8B5C2A',
+        borderBottom: '28px solid #8B5C2A',
+        borderRadius: 18,
+        boxSizing: 'border-box',
+        background: 'rgba(74, 55, 26, 0.10)',
+      }}
+    >
       {shelfRows.length > 0 ? (
         shelfRows.map((row, idx) => {
           // If any book in this row is hovered, expand the shelf
@@ -58,15 +72,14 @@ const BookShelf = ({ books = [], COLORS}) => {
               style={{
                 display: 'flex',
                 alignItems: 'flex-end',
-                borderRadius: 12,
-                margin: '1rem 0',
-                padding: '1rem 0',
-                boxShadow: '0 8px 24px #e0c3fc',
+                paddingTop: '1.5rem',
                 overflowX: 'hidden',
                 overflowY: 'hidden',
                 position: 'relative',
-                transition: 'box-shadow 0.3s, min-height 0.3s cubic-bezier(.4,2,.3,1)',
+                transition: 'min-height 0.3s cubic-bezier(.4,2,.3,1)',
                 minHeight: defaultShelfHeight,
+                border: '4px solid #8B5C2A', // brown border for wood effect
+                background: 'rgba(74, 55, 26, 0.45)', // more transparent wood background
                 // minHeight: isRowHovered ? expandedShelfHeight : defaultShelfHeight,
               }}
             >

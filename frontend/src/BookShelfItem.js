@@ -2,6 +2,20 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { GENRE_STYLES, BOOK_SHELF_CONSTANTS } from './constants'; // Import genre styles
 
+
+// Hash a string to a vibrant random color
+function hashStringToColor(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  // Generate HSL color (full spectrum, vibrant)
+  const h = Math.abs(hash) % 360;
+  const s = 70 + (Math.abs(hash) % 30); // 70-100% saturation
+  const l = 35 + (Math.abs(hash) % 40); // 35-75% lightness
+  return `hsl(${h},${s}%,${l}%)`;
+}
+
 const BookShelfItem = ({
   title,
   coverImage,
@@ -11,6 +25,9 @@ const BookShelfItem = ({
   fontFamily = 'Georgia, serif'
 }) => {
   const [hovered, setHovered] = useState(false);
+
+  // Use hash of title for color
+  const hashedColor = title ? hashStringToColor(title) : null;
 
 // If pageCount is provided and > 0, use it for width; else use title length
   let dynamicWidth;
@@ -36,6 +53,7 @@ const BookShelfItem = ({
 
   // Use shelfLocation to pick a style from GENRE_STYLES, fallback to Default
   const shelfStyle = GENRE_STYLES[shelfLocation] || GENRE_STYLES.Default;
+  const bookSpineColor = hashedColor || (shelfStyle.background || spineColor);
 
   return (
     <div
@@ -64,12 +82,11 @@ const BookShelfItem = ({
           maxWidth: dynamicWidth,
           position: 'relative',
           transformStyle: 'preserve-3d',
-          transition: 'width 0.22s cubic-bezier(.4,2,.3,1), transform 0.35s cubic-bezier(.4,2,.3,1), box-shadow 0.25s, background 0.18s',
+          transition: 'width 0.22s cubic-bezier(.4,2,.3,1), transform 0.35s cubic-bezier(.4,2,.3,1), background 0.18s',
           transform: hovered
             ? `translateZ(${dynamicWidth}px) rotateY(-18deg) scale(1.08)`
             : 'translateZ(0) rotateY(0deg) scale(1)',
-          boxShadow: '0 4px 16px 0 #e0c3fc',
-          background: hovered ? '#fff' : (shelfStyle.background || spineColor),
+          background: hovered ? '#fff' : bookSpineColor,
           borderRadius: 7,
           cursor: 'pointer',
           zIndex: hovered ? 10 : 1,
@@ -85,9 +102,6 @@ const BookShelfItem = ({
             fontWeight: 700,
             fontSize: `${fontSize}rem`,
             letterSpacing: 2,
-            textShadow: hovered
-              ? '0 2px 8px #ffd580'
-              : '1px 1px 6px #7c3f00',
             width: '100%',
             textAlign: 'right',
             padding: '0.5rem 0',
@@ -121,7 +135,6 @@ const BookShelfItem = ({
               width: dynamicHeight * 0.68,
               height: dynamicHeight,
               borderRadius: 7,
-            //   boxShadow: 'none',
               background: '#fff',
               objectFit: 'cover',
               zIndex: 20,

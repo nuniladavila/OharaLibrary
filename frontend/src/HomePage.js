@@ -71,19 +71,37 @@ function HomePage() {
     <div style={{
       minHeight: '100vh',
       fontFamily: 'Georgia, serif',
-      background: COLORS.background,
+      background: 'url("https://www.transparenttextures.com/patterns/wood-pattern.png"), #f7efe3',
+      backgroundRepeat: 'repeat',
+      backgroundSize: 'auto',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
       position: 'relative',
     }}>
       {/* Header */}
-      <header style={{ background: COLORS.header, color: COLORS.headerText, fontSize: '2.5rem', padding: '1.5rem 0 1rem 0', boxShadow: '0 2px 8px ' + COLORS.shelfShadow, textAlign: 'center', letterSpacing: 2, fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-        <img src={logo} alt="Ohara Library Logo" style={{ height: 60, width: 60, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', boxShadow: '0 2px 8px #e0c3fc' }} />
+      <header style={{
+        background: 'transparent',
+        color: COLORS.headerText,
+        fontSize: '2.5rem',
+        padding: '1.5rem 0 1rem 0',
+        textAlign: 'center',
+        letterSpacing: 2,
+        fontFamily: 'Georgia, serif',
+        fontWeight: 700,
+        borderBottom: 'none',
+        transition: 'background 0.3s',
+      }}>
+        <img src={logo} alt="Ohara Library Logo" style={{ height: 100, width: 100, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', background: 'rgba(255,255,255,0.7)' }} />
         Ohara Library
       </header>
-      {/* Navigation Bar */}
-      {/* <nav 67777777 */}
+      {/* Curly swirly divider below header */}
+      {/* <div style={{ width: '100%', overflow: 'hidden', lineHeight: 0, marginBottom: '-1.2rem' }}>
+        <svg viewBox="0 0 1200 60" width="100%" height="60" preserveAspectRatio="none" style={{ display: 'block' }}>
+          <path d="M0,30 Q150,60 300,30 T600,30 T900,30 T1200,30" fill="none" stroke="#e0c3fc" strokeWidth="6"/>
+          <path d="M0,40 Q150,10 300,40 T600,40 T900,40 T1200,40" fill="none" stroke="#b08d57" strokeWidth="3"/>
+        </svg>
+      </div> */}
       {/* Search and sort controls */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 32, margin: '2rem auto 1.5rem', maxWidth: 900, width: '100%' }}>
         <input
@@ -98,7 +116,6 @@ function HomePage() {
             border: '2px solid #e0c3fc',
             fontSize: '1.1rem',
             outline: 'none',
-            boxShadow: '0 2px 12px #e0c3fc',
             background: '#fff',
             color: 'black',
             fontFamily: 'Georgia, serif',
@@ -140,7 +157,6 @@ function HomePage() {
               fontWeight: 'bold',
               cursor: 'pointer',
               fontSize: '1rem',
-              boxShadow: '0 2px 8px #e0c3fc',
               fontFamily: 'Georgia, serif',
             }}
             title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
@@ -165,21 +181,16 @@ function HomePage() {
           }}
         >
           <img
-            src="https://img.icons8.com/ios-filled/32/ffd580/user-shield.png"
+            src="https://img.icons8.com/ios-filled/32/ffffff/user-shield.png"
             alt="Admin Panel"
-            style={{ width: 28, height: 28, filter: 'drop-shadow(0 2px 6px #e0c3fc)' }}
+            style={{ width: 28, height: 28 }}
           />
         </button>
       </div>
       {/* Animations */}
       <style>{`
         @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
-        .book-tooltip { opacity: 0; pointer-events: none; animation: fadeIn 0.2s forwards; }
-        .shelf-row { transition: box-shadow 0.3s; }
-        .book-cover { transition: transform 0.2s, box-shadow 0.2s; }
-        .book-cover, .shelf-row, .bookshelf-item, .spine-or-cover {
-          box-shadow: 0 2px 8px #e0c3fc !important;
-        }
+        .book-cover { transition: transform 0.2s; }
         .book-cover:hover { z-index: 2; }
       `}</style>
     </div>

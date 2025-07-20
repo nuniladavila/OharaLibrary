@@ -5,8 +5,7 @@ export const COLORS = {
   bookShadow: 'rgba(160,132,202,0.15)',
   bookHoverShadow: '#b39ddb', // lighter purple
   bookBg: '#f8f0fc', // very light purple
-  header: '#7c3f99', // deep lilac
-  headerText: '#f3e8ff', // light lilac
+  headerText: '#7c3f99', // deep lilac
   nav: '#b39ddb', // soft purple
   navText: '#7c3f99',
   tooltipBg: '#e0c3fc', // pastel purple

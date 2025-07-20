@@ -43,8 +43,7 @@ const BookShelf = ({ books = [], COLORS}) => {
   const [hoveredBookId, setHoveredBookId] = useState(null);
 
   // Height for expanded shelf (cover image height + some margin)
-  const expandedShelfHeight = 200;
-  const defaultShelfHeight = 120;
+  const defaultShelfHeight = 170;
 
   return (
     <div ref={containerRef} style={{ width: '100%', maxWidth: 1200, margin: '0 auto', paddingBottom: 40 }}>
@@ -67,7 +66,8 @@ const BookShelf = ({ books = [], COLORS}) => {
                 overflowY: 'hidden',
                 position: 'relative',
                 transition: 'box-shadow 0.3s, min-height 0.3s cubic-bezier(.4,2,.3,1)',
-                minHeight: isRowHovered ? expandedShelfHeight : defaultShelfHeight,
+                minHeight: defaultShelfHeight,
+                // minHeight: isRowHovered ? expandedShelfHeight : defaultShelfHeight,
               }}
             >
               {row.map(book => (

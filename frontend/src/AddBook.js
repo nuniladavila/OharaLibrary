@@ -69,8 +69,8 @@ function AddBook() {
   };
 
   return (
-    <div style={{ maxWidth: 480, margin: '3rem auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 16px coral', padding: '2rem' }}>
-      <h2 style={{ textAlign: 'center', color: 'coral', marginBottom: '2rem' }}>Add a Book</h2>
+    <div style={{ maxWidth: 480, margin: '3rem auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 16px #a084ca', padding: '2rem' }}>
+      <h2 style={{ textAlign: 'center', color: '#a084ca', margin: '0 auto 2rem', padding: '0.5rem 0', letterSpacing: 1 }}>Add a Book</h2>
       <form onSubmit={handleSubmit}>
         <label style={{ display: 'block', marginBottom: 12 }}>
           ISBN:
@@ -81,7 +81,7 @@ function AddBook() {
             required
             ref={isbnRef}
             autoFocus
-            style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid coral', marginTop: 4 }}
+            style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #a084ca', marginTop: 4, background: '#f3e8ff' }}
           />
         </label>
         <div style={{ marginBottom: 16 }}>
@@ -131,7 +131,7 @@ function AddBook() {
           <select
             value={shelfLocation}
             onChange={e => setShelfLocation(e.target.value)}
-            style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid coral', marginTop: 4 }}
+            style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #a084ca', marginTop: 4, background: '#f3e8ff' }}
           >
             {SHELF_LOCATIONS.map(loc => (
               <option key={loc} value={loc}>{loc}</option>
@@ -140,7 +140,7 @@ function AddBook() {
         </label>
         {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
         {success && <div style={{ color: 'green', marginBottom: 12 }}>{success}</div>}
-        <button type="submit" style={{ width: '100%', padding: '0.75rem', borderRadius: 8, background: 'coral', color: '#fff', fontWeight: 'bold', border: 'none', fontSize: '1.1rem', cursor: 'pointer' }}>
+        <button type="submit" style={{ width: '100%', padding: '0.75rem', borderRadius: 8, background: '#a084ca', color: '#fff', fontWeight: 'bold', border: 'none', fontSize: '1.1rem', cursor: 'pointer', boxShadow: '0 2px 8px #a084ca' }}>
           Add Book
         </button>
       </form>

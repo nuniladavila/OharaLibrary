@@ -68,9 +68,7 @@ const BookShelfItem = ({
           transform: hovered
             ? `translateZ(${dynamicWidth}px) rotateY(-18deg) scale(1.08)`
             : 'translateZ(0) rotateY(0deg) scale(1)',
-          boxShadow: hovered
-            ? '0 12px 32px 0 rgba(124,63,0,0.25), 0 0 0 4px #ffd580'
-            : '0 4px 16px 0 rgba(124,63,0,0.15)',
+          boxShadow: '0 4px 16px 0 #e0c3fc',
           background: hovered ? '#fff' : (shelfStyle.background || spineColor),
           borderRadius: 7,
           cursor: 'pointer',
@@ -123,7 +121,7 @@ const BookShelfItem = ({
               width: dynamicHeight * 0.68,
               height: dynamicHeight,
               borderRadius: 7,
-              boxShadow: '0 8px 32px 0 #b08d57',
+            //   boxShadow: 'none',
               background: '#fff',
               objectFit: 'cover',
               zIndex: 20,

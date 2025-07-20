@@ -1,26 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import BookSidePanel from './BookSidePanel';
 import BookShelf from './BookShelf';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/librarynicolilac.png';
+import { COLORS } from './constants'; // Import your color constants
 
-// Warm library-inspired palette
-const COLORS = {
-  background: 'linear-gradient(90deg, #f5e9da 0%, #b08d57 100%)',
-  shelf: '#b08d57',
-  shelfShadow: 'rgba(124,63,0,0.10)',
-  bookShadow: 'rgba(124,63,0,0.15)',
-  bookHoverShadow: '#a94442',
-  bookBg: '#ffd580',
-  header: '#7c3f00',
-  headerText: '#ffd580',
-  nav: '#a94442',
-  navText: '#fff',
-  tooltipBg: '#ffd580',
-  tooltipText: '#7c3f00',
-  genreBg: '#a94442',
-  genreText: '#fff',
-};
 
 function HomePage() {
   const [books, setBooks] = useState([]);
@@ -55,14 +38,26 @@ function HomePage() {
 
   // Sorting
   const sortedBooks = [...filteredBooks].sort((a, b) => {
-    // Always sort by ShelfLocation, then BookTitle
-    const aShelf = a.ShelfLocation ?? '';
-    const bShelf = b.ShelfLocation ?? '';
-    const shelfCmp = sortOrder === 'asc' ? aShelf.localeCompare(bShelf) : bShelf.localeCompare(aShelf);
-    if (shelfCmp !== 0) return shelfCmp;
-    const aTitle = a.BookTitle ?? '';
-    const bTitle = b.BookTitle ?? '';
-    return sortOrder === 'asc' ? aTitle.localeCompare(bTitle) : bTitle.localeCompare(aTitle);
+    if (sortKey === 'ShelfLocation') {
+      // Default: sort by shelf, then title
+      const aShelf = a.ShelfLocation ?? '';
+      const bShelf = b.ShelfLocation ?? '';
+      const shelfCmp = sortOrder === 'asc' ? aShelf.localeCompare(bShelf) : bShelf.localeCompare(aShelf);
+      if (shelfCmp !== 0) return shelfCmp;
+      const aTitle = a.BookTitle ?? '';
+      const bTitle = b.BookTitle ?? '';
+      return sortOrder === 'asc' ? aTitle.localeCompare(bTitle) : bTitle.localeCompare(aTitle);
+    } else {
+      const aVal = a[sortKey] ?? '';
+      const bVal = b[sortKey] ?? '';
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+      return 0;
+    }
   });
 
   const handleAdminClick = async () => {
@@ -84,15 +79,11 @@ function HomePage() {
     }}>
       {/* Header */}
       <header style={{ background: COLORS.header, color: COLORS.headerText, fontSize: '2.5rem', padding: '1.5rem 0 1rem 0', boxShadow: '0 2px 8px ' + COLORS.shelfShadow, textAlign: 'center', letterSpacing: 2, fontFamily: 'Georgia, serif', fontWeight: 700 }}>
-        <img src={logo} alt="Ohara Library Logo" style={{ height: 60, width: 60, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', boxShadow: '0 2px 8px #b08d57' }} />
+        <img src={logo} alt="Ohara Library Logo" style={{ height: 60, width: 60, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', boxShadow: '0 2px 8px #e0c3fc' }} />
         Ohara Library
       </header>
       {/* Navigation Bar */}
-      <nav style={{ background: COLORS.nav, color: COLORS.navText, display: 'flex', justifyContent: 'center', gap: '2rem', padding: '1rem 0', fontSize: '1.1rem', fontFamily: 'Georgia, serif', fontWeight: 500, boxShadow: '0 2px 8px ' + COLORS.shelfShadow }}>
-        <span style={{ cursor: 'pointer', borderBottom: '2px solid #ffd580', paddingBottom: 2 }}>Collections</span>
-        <span style={{ cursor: 'pointer', opacity: 0.8 }}>Wishlist</span>
-        <span style={{ cursor: 'pointer', opacity: 0.8 }}>Recently Read</span>
-      </nav>
+      {/* <nav 67777777 */}
       {/* Search and sort controls */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 32, margin: '2rem auto 1.5rem', maxWidth: 900, width: '100%' }}>
         <input
@@ -104,12 +95,12 @@ function HomePage() {
             width: 320,
             padding: '1rem 1.5rem',
             borderRadius: '2rem',
-            border: '2px solid #b08d57',
+            border: '2px solid #e0c3fc',
             fontSize: '1.1rem',
             outline: 'none',
-            boxShadow: '0 2px 12px #b08d57',
+            boxShadow: '0 2px 12px #e0c3fc',
             background: '#fff',
-            color: '#7c3f00',
+            color: 'black',
             fontFamily: 'Georgia, serif',
           }}
         />
@@ -149,7 +140,7 @@ function HomePage() {
               fontWeight: 'bold',
               cursor: 'pointer',
               fontSize: '1rem',
-              boxShadow: '0 2px 8px ' + COLORS.shelf,
+              boxShadow: '0 2px 8px #e0c3fc',
               fontFamily: 'Georgia, serif',
             }}
             title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
@@ -176,7 +167,7 @@ function HomePage() {
           <img
             src="https://img.icons8.com/ios-filled/32/ffd580/user-shield.png"
             alt="Admin Panel"
-            style={{ width: 28, height: 28, filter: 'drop-shadow(0 2px 6px #7c3f00)' }}
+            style={{ width: 28, height: 28, filter: 'drop-shadow(0 2px 6px #e0c3fc)' }}
           />
         </button>
       </div>
@@ -186,6 +177,9 @@ function HomePage() {
         .book-tooltip { opacity: 0; pointer-events: none; animation: fadeIn 0.2s forwards; }
         .shelf-row { transition: box-shadow 0.3s; }
         .book-cover { transition: transform 0.2s, box-shadow 0.2s; }
+        .book-cover, .shelf-row, .bookshelf-item, .spine-or-cover {
+          box-shadow: 0 2px 8px #e0c3fc !important;
+        }
         .book-cover:hover { z-index: 2; }
       `}</style>
     </div>

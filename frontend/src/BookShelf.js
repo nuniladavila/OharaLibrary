@@ -39,53 +39,68 @@ const BookShelf = ({ books = [], COLORS}) => {
 
   const shelfRows = groupBooksByCount(books, booksPerShelf);
 
+  // Track which book is hovered in each row
+  const [hoveredBookId, setHoveredBookId] = useState(null);
+
+  // Height for expanded shelf (cover image height + some margin)
+  const expandedShelfHeight = 200;
+  const defaultShelfHeight = 120;
+
   return (
     <div ref={containerRef} style={{ width: '100%', maxWidth: 1200, margin: '0 auto', paddingBottom: 40 }}>
       {shelfRows.length > 0 ? (
-        shelfRows.map((row, idx) => (
-          <div
-            key={idx}
-            className="shelf-row"
-            style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              borderRadius: 12,
-              margin: '1rem 0',
-              padding: '1rem 0',
-              boxShadow: '0 8px 24px ' + COLORS.shelfShadow,
-              overflowX: 'hidden',
-              position: 'relative',
-              transition: 'box-shadow 0.3s',
-            }}
-          >
-            {row.map(book => (
-              <div
-                key={book.Id}
-                style={{ position: 'relative', cursor: 'pointer' }}
-                onClick={() => setSelectedBook(book)}
-                tabIndex={0}
-                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedBook(book); }}
-                aria-label={`View details for ${book.BookTitle}`}
-                role="button"
-              >
-                <BookShelfItem
-                  title={book.BookTitle}
-                  coverImage={book.thumbnail}
-                  spineColor={COLORS.shelf}
-                  pageCount={book.PageCount}
-                  fontFamily={'Georgia, serif'}
-                  shelfLocation={book.ShelfLocation}
-                />
-              </div>
-            ))}
-          </div>
-        ))
+        shelfRows.map((row, idx) => {
+          // If any book in this row is hovered, expand the shelf
+          const isRowHovered = row.some(book => book.Id === hoveredBookId);
+          return (
+            <div
+              key={idx}
+              className="shelf-row"
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                borderRadius: 12,
+                margin: '1rem 0',
+                padding: '1rem 0',
+                boxShadow: '0 8px 24px #e0c3fc',
+                overflowX: 'hidden',
+                overflowY: 'hidden',
+                position: 'relative',
+                transition: 'box-shadow 0.3s, min-height 0.3s cubic-bezier(.4,2,.3,1)',
+                minHeight: isRowHovered ? expandedShelfHeight : defaultShelfHeight,
+              }}
+            >
+              {row.map(book => (
+                <div
+                  key={book.Id}
+                  style={{ position: 'relative', cursor: 'pointer' }}
+                  onClick={() => setSelectedBook(book)}
+                  tabIndex={0}
+                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedBook(book); }}
+                  aria-label={`View details for ${book.BookTitle}`}
+                  role="button"
+                  onMouseEnter={() => setHoveredBookId(book.Id)}
+                  onMouseLeave={() => setHoveredBookId(null)}
+                >
+                  <BookShelfItem
+                    title={book.BookTitle}
+                    coverImage={book.thumbnail}
+                    spineColor={COLORS.shelf}
+                    pageCount={book.PageCount}
+                    fontFamily={'Georgia, serif'}
+                    shelfLocation={book.ShelfLocation}
+                  />
+                </div>
+              ))}
+            </div>
+          );
+        })
       ) : (
-        <div style={{ color: COLORS.header, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #b08d57' }}>No books found.</div>
+        <div style={{ color: COLORS.header, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #e0c3fc' }}>No books found.</div>
       )}
-    {/* Side pane for book details */}
-    <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)} />
-    </div> 
+      {/* Side pane for book details */}
+      <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)} />
+    </div>
   );
 };
 

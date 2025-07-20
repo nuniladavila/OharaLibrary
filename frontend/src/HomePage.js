@@ -25,8 +25,7 @@ const COLORS = {
 function HomePage() {
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [sortKey, setSortKey] = useState('BookTitle');
+  const [sortKey, setSortKey] = useState('ShelfLocation');
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
 
@@ -56,15 +55,14 @@ function HomePage() {
 
   // Sorting
   const sortedBooks = [...filteredBooks].sort((a, b) => {
-    const aVal = a[sortKey] ?? '';
-    const bVal = b[sortKey] ?? '';
-    if (typeof aVal === 'string' && typeof bVal === 'string') {
-      return sortOrder === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    }
-    if (typeof aVal === 'number' && typeof bVal === 'number') {
-      return sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
-    }
-    return 0;
+    // Always sort by ShelfLocation, then BookTitle
+    const aShelf = a.ShelfLocation ?? '';
+    const bShelf = b.ShelfLocation ?? '';
+    const shelfCmp = sortOrder === 'asc' ? aShelf.localeCompare(bShelf) : bShelf.localeCompare(aShelf);
+    if (shelfCmp !== 0) return shelfCmp;
+    const aTitle = a.BookTitle ?? '';
+    const bTitle = b.BookTitle ?? '';
+    return sortOrder === 'asc' ? aTitle.localeCompare(bTitle) : bTitle.localeCompare(aTitle);
   });
 
   const handleAdminClick = async () => {
@@ -74,9 +72,6 @@ function HomePage() {
     navigate('/admin-panel');
   };
 
-  // Tooltip state
-  const [hoveredBook, setHoveredBook] = useState(null);
-
   return (
     <div style={{
       minHeight: '100vh',
@@ -85,7 +80,6 @@ function HomePage() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
-      overflow: selectedBook ? 'hidden' : 'auto',
       position: 'relative',
     }}>
       {/* Header */}
@@ -165,9 +159,7 @@ function HomePage() {
         </div>
       </div>
       {/* Bookshelf rows */}
-      <BookShelf books={sortedBooks} COLORS={COLORS} setSelectedBook={setSelectedBook} />
-      {/* Side pane for book details */}
-      <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)} />
+      <BookShelf books={sortedBooks} COLORS={COLORS}/>
       {/* Admin icon */}
       <div style={{ position: 'fixed', top: 24, right: 32, zIndex: 10 }}>
         <button

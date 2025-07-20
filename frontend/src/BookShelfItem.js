@@ -1,107 +1,38 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
-// Genre-based style presets
-const GENRE_STYLES = {
-  'Spanish Non-Fiction': {
-    background: 'linear-gradient(135deg, #b08d57 70%, #c8a2c8 100%)',
-    color: '#fff',
-    accent: '#c8a2c8',
-    fontFamily: 'Georgia, serif',
-    texture: 'repeating-linear-gradient(135deg, #fff2, #fff2 4px, transparent 4px, transparent 8px)',
-    icon: '📜',
-  },
-  'Spanish Fiction': {
-    background: 'linear-gradient(135deg, #8d5524 70%, #c68642 100%)',
-    color: '#fff',
-    accent: '#a67c52',
-    fontFamily: 'Trebuchet MS, sans-serif',
-    texture: 'repeating-linear-gradient(45deg, #fff1, #fff1 6px, transparent 6px, transparent 12px)',
-    icon: '🧭',
-  },
-  'New TBR': {
-    background: 'linear-gradient(135deg, #6b4fbb 70%, #e0c3fc 100%)',
-    color: '#fff',
-    accent: '#e0c3fc',
-    fontFamily: 'Papyrus, fantasy',
-    texture: 'repeating-linear-gradient(90deg, #fff2, #fff2 3px, transparent 3px, transparent 6px)',
-    icon: '✨',
-  },
-  'Comics': {
-    background: 'linear-gradient(135deg, #2d3a4b 70%, #6dd5ed 100%)',
-    color: '#fff',
-    accent: '#6dd5ed',
-    fontFamily: 'Consolas, monospace',
-    texture: 'repeating-linear-gradient(135deg, #fff2, #fff2 2px, transparent 2px, transparent 4px)',
-    icon: '🔬',
-  },
-  'English Non-Fiction': {
-    background: 'linear-gradient(135deg, #e75480 70%, #ffd1dc 100%)',
-    color: '#fff',
-    accent: '#ffd1dc',
-    fontFamily: 'Brush Script MT, cursive',
-    texture: 'repeating-linear-gradient(135deg, #fff2, #fff2 5px, transparent 5px, transparent 10px)',
-    icon: '💖',
-  },
-  'English General Fiction': {
-    background: 'linear-gradient(135deg, #a67c52 70%, #ffd580 100%)',
-    color: '#fff',
-    accent: '#ffd580',
-    fontFamily: 'Georgia, serif',
-    texture: '',
-    icon: '',
-  },
-  'English Classics': {
-    background: 'linear-gradient(135deg, #b08d57 70%, #c8a2c8 100%)',
-    color: '#fff',
-    accent: '#c8a2c8',
-    fontFamily: 'Georgia, serif',
-    texture: 'repeating-linear-gradient(135deg, #fff2, #fff2 4px, transparent 4px, transparent 8px)',
-    icon: '📜',
-  },
-  'English Speculative': {
-    background: 'linear-gradient(135deg, #6b4fbb 70%, #e0c3fc 100%)',
-    color: '#fff',
-    accent: '#e0c3fc',
-    fontFamily: 'Papyrus, fantasy',
-    texture: 'repeating-linear-gradient(90deg, #fff2, #fff2 3px, transparent 3px, transparent 6px)',
-    icon: '✨',
-  },
-  // Default fallback
-  Default: {
-    background: 'linear-gradient(135deg, #a67c52 70%, #ffd580 100%)',
-    color: '#fff',
-    accent: '#ffd580',
-    fontFamily: 'Georgia, serif',
-    texture: '',
-    icon: '',
-  },
-};
-
+import { GENRE_STYLES, BOOK_SHELF_CONSTANTS } from './constants'; // Import genre styles
 
 const BookShelfItem = ({
   title,
   coverImage,
   shelfLocation,
+  pageCount = 0,
   spineColor = '#a67c52',
-  fontFamily = 'Georgia, serif',
-  height = 160,
-  width,
+  fontFamily = 'Georgia, serif'
 }) => {
   const [hovered, setHovered] = useState(false);
 
-  // Dynamically calculate width and height based on title length
-  const minWidth = 20;
-  const maxWidth = 64;
-  const minHeight = 140;
-  const maxHeight = 180;
-  const fontSize = 1.05; // rem
-  // Estimate width: 8px per character, clamped
-  const dynamicWidth = Math.max(minWidth, Math.min(maxWidth, 8 * (title ? title.length : 1)));
-  // Estimate height: base + 1.5px per character, clamped
-  const dynamicHeight = Math.max(minHeight, Math.min(maxHeight, height + (title ? Math.floor(title.length * 1.5) : 0)));
+// If pageCount is provided and > 0, use it for width; else use title length
+  let dynamicWidth;
+  if (pageCount && pageCount > 0) {
+    // 1px per 10 pages, clamped
+    dynamicWidth = Math.max(BOOK_SHELF_CONSTANTS.minBookWidth, Math.min(BOOK_SHELF_CONSTANTS.maxBookWidth, Math.round(pageCount / 10)));
+  } else {
+    dynamicWidth = Math.max(BOOK_SHELF_CONSTANTS.minBookWidth, Math.min(BOOK_SHELF_CONSTANTS.maxBookWidth, 8 * (title ? title.length : 1)));
+  }
 
-    console.log('BookShelfItem props:', dynamicWidth)
+  // Dynamically scale font size so title fits within the spine width
+  let fontSize = 1.05; // rem default
+  if (title && dynamicWidth) {
+    const maxChars = 14;
+    if (title.length > maxChars) {
+      fontSize = 0.85;
+    //   fontSize = Math.max(BOOK_SHELF_CONSTANTS.minFontSize, (dynamicWidth / (title.length/charsPerLine * 0.7)));
+    }
+  }
+
+  // Estimate height: base + 1.5px per character, clamped
+  const dynamicHeight = Math.max(BOOK_SHELF_CONSTANTS.minBookHeight, Math.min(BOOK_SHELF_CONSTANTS.maxBookHeight, 160 + (title ? Math.floor(title.length * 1.5) : 0)));
 
   // Use shelfLocation to pick a style from GENRE_STYLES, fallback to Default
   const shelfStyle = GENRE_STYLES[shelfLocation] || GENRE_STYLES.Default;
@@ -213,6 +144,7 @@ BookShelfItem.propTypes = {
   fontFamily: PropTypes.string,
   height: PropTypes.number,
   width: PropTypes.number,
+  pageCount: PropTypes.number,
 };
 
 export default BookShelfItem;

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import BookShelfItem from './BookShelfItem';
-
+import BookSidePanel from './BookSidePanel';
+import { BOOK_SHELF_CONSTANTS } from './constants';
 
 
 function groupBooksByCount(books, count) {
@@ -14,21 +15,21 @@ function groupBooksByCount(books, count) {
 }
 
 
-const BookShelf = ({ books = [], COLORS, setSelectedBook }) => {
+const BookShelf = ({ books = [], COLORS}) => {
   const containerRef = useRef(null);
+  const [selectedBook, setSelectedBook] = useState(null);
   const [booksPerShelf, setBooksPerShelf] = useState(20);
 
   useEffect(() => {
     function updateBooksPerShelf() {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.offsetWidth;
-      // Estimate average book width (including margin): 64px + 5px = 69px
-      // But allow for smaller books, so use 50px as a lower bound
-      const avgBookWidth = 54; // 49px book + 5px margin
-      const min = 5;
-      const max = 40;
-      let count = Math.floor(containerWidth / avgBookWidth);
-      count = Math.max(min, Math.min(max, count));
+    //   const margin = 5;
+      const totalBookWidth = BOOK_SHELF_CONSTANTS.maxBookWidth * 0.9;
+      let count = Math.floor(containerWidth / totalBookWidth);
+        console.log("Calculated books per shelf:", count);
+
+      count = Math.max(18, count); // Always show at least 18 books per shelf
       setBooksPerShelf(count);
     }
     updateBooksPerShelf();
@@ -49,8 +50,8 @@ const BookShelf = ({ books = [], COLORS, setSelectedBook }) => {
               display: 'flex',
               alignItems: 'flex-end',
               borderRadius: 12,
-              margin: '2.5rem 0',
-              padding: '1.5rem 0 1.2rem 0',
+              margin: '1rem 0',
+              padding: '1rem 0',
               boxShadow: '0 8px 24px ' + COLORS.shelfShadow,
               overflowX: 'hidden',
               position: 'relative',
@@ -58,16 +59,22 @@ const BookShelf = ({ books = [], COLORS, setSelectedBook }) => {
             }}
           >
             {row.map(book => (
-              <div key={book.Id} style={{ position: 'relative' }}>
+              <div
+                key={book.Id}
+                style={{ position: 'relative', cursor: 'pointer' }}
+                onClick={() => setSelectedBook(book)}
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedBook(book); }}
+                aria-label={`View details for ${book.BookTitle}`}
+                role="button"
+              >
                 <BookShelfItem
                   title={book.BookTitle}
                   coverImage={book.thumbnail}
                   spineColor={COLORS.shelf}
+                  pageCount={book.PageCount}
                   fontFamily={'Georgia, serif'}
-                  height={Math.max(140, Math.min(170, 120 + (book.BookTitle ? book.BookTitle.length * 2 : 0)))}
-                  width={Math.max(32, Math.min(64, 12 * (book.BookTitle ? book.BookTitle.length : 1)))}
                   shelfLocation={book.ShelfLocation}
-                  onClick={() => setSelectedBook(book)}
                 />
               </div>
             ))}
@@ -76,7 +83,9 @@ const BookShelf = ({ books = [], COLORS, setSelectedBook }) => {
       ) : (
         <div style={{ color: COLORS.header, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #b08d57' }}>No books found.</div>
       )}
-    </div>
+    {/* Side pane for book details */}
+    <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)} />
+    </div> 
   );
 };
 

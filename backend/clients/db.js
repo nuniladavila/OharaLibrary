@@ -74,6 +74,59 @@ export function addBookToDb(book) {
   });
 }
 
+export function modifyBookInDb(book) {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.run(
+      `UPDATE Books SET
+        BookTitle = ?,
+        Author = ?,
+        Editor = ?,
+        Category = ?,
+        SubCategory = ?,
+        Publisher = ?,
+        PublishedDate = ?,
+        Edition = ?,
+        Language = ?,
+        ShelfLocation = ?,
+        ISBN = ?,
+        Notes = ?,
+        Read = ?,
+        DateAdded = ?,
+        DateAcquired = ?,
+        ImageLink = ?
+      WHERE id = ?`,
+      [
+        book.BookTitle,
+        book.Author,
+        book.Editor,
+        book.Category,
+        book.SubCategory,
+        book.Publisher,
+        book.PublishedDate,
+        book.Edition,
+        book.Language,
+        book.ShelfLocation,
+        book.ISBN,
+        book.Notes,
+        book.Read ? 1 : 0,
+        book.DateAdded,
+        book.DateAcquired,
+        book.ImageLink,
+        book.id
+      ],
+      function(err) {
+        if (err) {
+          console.error('Error updating book:', err);
+          reject(err);
+        } else {
+          resolve({ changes: this.changes });
+        }
+      }
+    );
+  });
+}
+
 export function deleteBookFromDb(id) {
   return new Promise((resolve, reject) => {
     const db = connectToSqlite();

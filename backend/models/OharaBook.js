@@ -51,6 +51,7 @@ class OharaBook {
     this.DateAdded = new Date();
     this.DateAcquired = new Date();
     this.ImageLink = googleBook?.imageLinks?.thumbnail;
+    this.PageCount = googleBook?.pageCount || 0;
   }
 
 }

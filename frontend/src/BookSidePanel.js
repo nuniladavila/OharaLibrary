@@ -21,15 +21,14 @@ function BookSidePanel({ book, onClose }) {
         height: '100vh',
         width: '400px',
         background: '#fff',
-        boxShadow: '-8px 0 32px #a084ca', // lilac purple
         zIndex: 100,
-        padding: '2.5rem 2rem 2rem 2rem',
+        padding: '0 1rem',
         display: 'flex',
         flexDirection: 'column',
         overflowY: 'auto',
         transition: 'transform 0.3s',
-        borderTopLeftRadius: '2rem',
-        borderBottomLeftRadius: '2rem',
+        borderTopLeftRadius: '1rem',
+        borderBottomLeftRadius: '1rem',
       }}
       role="dialog"
       aria-modal="true"
@@ -50,10 +49,10 @@ function BookSidePanel({ book, onClose }) {
         &times;
       </button>
       <img
-        src={book.thumbnail}
+        src={ book.thumbnail ||`https://placehold.co/180x260?text=${encodeURIComponent(book.BookTitle || 'No Cover')}`}
         alt={book.BookTitle}
-        style={{ width: '180px', height: '260px', objectFit: 'cover', borderRadius: '1rem', margin: '0 auto 1.5rem', background: '#f3e8ff', border: '2px solid #a084ca', boxShadow: '0 2px 12px #a084ca' }}
-        onError={e => {e.target.src='https://via.placeholder.com/180x260?text=No+Cover';}}
+        style={{ width: '180px', height: '260px', objectFit: 'cover', borderRadius: '1rem', margin: '0 auto 1.5rem', background: '#f3e8ff', border: '2px solid #a084ca'}}
+        onError={e => {e.target.src=`https://placehold.co/180x260?text=${encodeURIComponent(book.BookTitle || 'No Cover')}`;}}
       />
       <h2 style={{ color: '#a084ca', fontWeight: 'bold', fontSize: '1.5rem', marginBottom: '0.5rem', textAlign: 'center' }}>{book.BookTitle}</h2>
       <p style={{ color: '#333', fontWeight: 'bold', marginBottom: 8, textAlign: 'center' }}>{book.Author}</p>
@@ -80,7 +79,7 @@ function BookSidePanel({ book, onClose }) {
       {book.Notes && (
         <div style={{ marginBottom: 12 }}>
           <strong style={{ color: '#a084ca' }}>Notes:</strong>
-          <div style={{ color: '#444', fontStyle: 'italic', marginTop: 4 }}>{book.Notes}</div>
+          <div style={{ color: '#444', fontStyle: 'italic', marginTop: 4, whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxWidth: '100%' }}>{book.Notes}</div>
         </div>
       )}
     </div>

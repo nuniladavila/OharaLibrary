@@ -1,26 +1,23 @@
 export const COLORS = {
   background: 'linear-gradient(90deg, #f3e8ff 0%, #e0c3fc 100%)', // lilac to light purple
   shelf: '#a084ca', // lilac purple
-  shelfShadow: 'rgba(160,132,202,0.10)',
-  bookShadow: 'rgba(160,132,202,0.15)',
-  bookHoverShadow: '#b39ddb', // lighter purple
   bookBg: '#f8f0fc', // very light purple
-  headerText: '#7c3f99', // deep lilac
+  headerText: 'white', // deep lilac
+  //headerText: '#7c3f99', // deep lilac
   nav: '#b39ddb', // soft purple
-  navText: '#7c3f99',
+  navText: '#a084ca',
   tooltipBg: '#e0c3fc', // pastel purple
   tooltipText: '#7c3f99',
   genreBg: '#a084ca',
   genreText: '#fff',
+  bookshelfColorWood: '#63471dff', // warm wood color
 };
 
 export const BOOK_SHELF_CONSTANTS = {
-    minBookWidth: 20,
-    maxBookWidth: 64,
-    minBookHeight: 120,
-    maxBookHeight: 180,
-    minFontSize: 0.65,
-    maxFontSize: 1.05,
+  coverWidth: 110,
+  coverHeight: 170,
+  sideBorderWidth: 16,
+  topBottomBorderWidth: 28,
 };
 
 export const GENRE_STYLES = {

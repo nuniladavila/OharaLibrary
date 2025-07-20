@@ -23,12 +23,10 @@ const BookShelf = ({ books = [], COLORS}) => {
   useEffect(() => {
     function updateBooksPerShelf() {
       if (!containerRef.current) return;
-      const containerWidth = containerRef.current.offsetWidth;
-      const totalBookWidth = BOOK_SHELF_CONSTANTS.maxBookWidth * 0.9;
-      let count = Math.floor(containerWidth / totalBookWidth);
-        console.log("Calculated books per shelf:", count);
+      const containerWidth = containerRef.current.offsetWidth - BOOK_SHELF_CONSTANTS.sideBorderWidth * 2 - BOOK_SHELF_CONSTANTS.coverWidth * 0.75;
+      let count = Math.floor(containerWidth / BOOK_SHELF_CONSTANTS.coverWidth);
 
-      count = Math.max(18, count); // Always show at least 18 books per shelf
+      count = Math.max(1, count); // Always show at least 1 book per shelf
       setBooksPerShelf(count);
     }
     updateBooksPerShelf();
@@ -37,9 +35,6 @@ const BookShelf = ({ books = [], COLORS}) => {
   }, []);
 
   const shelfRows = groupBooksByCount(books, booksPerShelf);
-
-  // Track which book is hovered in each row
-  const [hoveredBookId, setHoveredBookId] = useState(null);
 
   // Height for expanded shelf (cover image height + some margin)
   const defaultShelfHeight = 170;
@@ -52,19 +47,21 @@ const BookShelf = ({ books = [], COLORS}) => {
         maxWidth: 1200,
         margin: '0 auto',
         paddingBottom: 40,
-        borderLeft: '16px solid #8B5C2A',
-        borderRight: '16px solid #8B5C2A',
-        borderTop: '24px solid #8B5C2A',
-        borderBottom: '28px solid #8B5C2A',
-        borderRadius: 18,
+        borderLeft: `${BOOK_SHELF_CONSTANTS.sideBorderWidth}px solid ${COLORS.bookshelfColorWood}`,
+        borderRight: `${BOOK_SHELF_CONSTANTS.sideBorderWidth}px solid ${COLORS.bookshelfColorWood}`,
+        borderTop: `${BOOK_SHELF_CONSTANTS.topBottomBorderWidth}px solid ${COLORS.bookshelfColorWood}`,
+        borderBottom: `${BOOK_SHELF_CONSTANTS.topBottomBorderWidth}px solid ${COLORS.bookshelfColorWood}`,
+        borderRadius: 5,
         boxSizing: 'border-box',
-        background: 'rgba(74, 55, 26, 0.10)',
+        background: 'url("https://www.transparenttextures.com/patterns/purty-wood.png"), #8a6227ff',
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
       {shelfRows.length > 0 ? (
         shelfRows.map((row, idx) => {
-          // If any book in this row is hovered, expand the shelf
-          const isRowHovered = row.some(book => book.Id === hoveredBookId);
           return (
             <div
               key={idx}
@@ -76,11 +73,9 @@ const BookShelf = ({ books = [], COLORS}) => {
                 overflowX: 'hidden',
                 overflowY: 'hidden',
                 position: 'relative',
-                transition: 'min-height 0.3s cubic-bezier(.4,2,.3,1)',
                 minHeight: defaultShelfHeight,
-                border: '4px solid #8B5C2A', // brown border for wood effect
+                border: `4px solid ${COLORS.bookshelfColorWood}`, // brown border for wood effect
                 background: 'rgba(74, 55, 26, 0.45)', // more transparent wood background
-                // minHeight: isRowHovered ? expandedShelfHeight : defaultShelfHeight,
               }}
             >
               {row.map(book => (
@@ -92,16 +87,11 @@ const BookShelf = ({ books = [], COLORS}) => {
                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedBook(book); }}
                   aria-label={`View details for ${book.BookTitle}`}
                   role="button"
-                  onMouseEnter={() => setHoveredBookId(book.Id)}
-                  onMouseLeave={() => setHoveredBookId(null)}
                 >
                   <BookShelfItem
                     title={book.BookTitle}
                     coverImage={book.thumbnail}
-                    spineColor={COLORS.shelf}
-                    pageCount={book.PageCount}
                     fontFamily={'Georgia, serif'}
-                    shelfLocation={book.ShelfLocation}
                   />
                 </div>
               ))}
@@ -114,6 +104,7 @@ const BookShelf = ({ books = [], COLORS}) => {
       {/* Side pane for book details */}
       <BookSidePanel book={selectedBook} onClose={() => setSelectedBook(null)} />
     </div>
+  
   );
 };
 

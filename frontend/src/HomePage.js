@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import 'semantic-ui-css/semantic.min.css';
+import { Input, Dropdown, Button, ButtonOr } from 'semantic-ui-react';
 import BookShelf from './BookShelf';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/librarynicolilac.png';
@@ -71,9 +73,7 @@ function HomePage() {
     <div style={{
       minHeight: '100vh',
       fontFamily: 'Georgia, serif',
-      background: 'url("https://www.transparenttextures.com/patterns/wood-pattern.png"), #f7efe3',
-      backgroundRepeat: 'repeat',
-      backgroundSize: 'auto',
+      background: 'linear-gradient(95deg, #d16ba5 0%, #86a8e7 50%, #5ffbf1 100%)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
@@ -83,7 +83,7 @@ function HomePage() {
       <header style={{
         background: 'transparent',
         color: COLORS.headerText,
-        fontSize: '2.5rem',
+        fontSize: '4.5rem',
         padding: '1.5rem 0 1rem 0',
         textAlign: 'center',
         letterSpacing: 2,
@@ -95,104 +95,86 @@ function HomePage() {
         <img src={logo} alt="Ohara Library Logo" style={{ height: 100, width: 100, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', background: 'rgba(255,255,255,0.7)' }} />
         Ohara Library
       </header>
-      {/* Curly swirly divider below header */}
-      {/* <div style={{ width: '100%', overflow: 'hidden', lineHeight: 0, marginBottom: '-1.2rem' }}>
-        <svg viewBox="0 0 1200 60" width="100%" height="60" preserveAspectRatio="none" style={{ display: 'block' }}>
-          <path d="M0,30 Q150,60 300,30 T600,30 T900,30 T1200,30" fill="none" stroke="#e0c3fc" strokeWidth="6"/>
-          <path d="M0,40 Q150,10 300,40 T600,40 T900,40 T1200,40" fill="none" stroke="#b08d57" strokeWidth="3"/>
-        </svg>
-      </div> */}
       {/* Search and sort controls */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 32, margin: '2rem auto 1.5rem', maxWidth: 900, width: '100%' }}>
-        <input
-          type="text"
+        <Input
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by title, author, or year..."
-          style={{
-            width: 320,
-            padding: '1rem 1.5rem',
-            borderRadius: '2rem',
-            border: '2px solid #e0c3fc',
-            fontSize: '1.1rem',
-            outline: 'none',
-            background: '#fff',
-            color: 'black',
-            fontFamily: 'Georgia, serif',
-          }}
+          style={{ width: 320 }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <label style={{ color: COLORS.header, fontWeight: 'bold', marginRight: 4 }}>
+          <label style={{ color: COLORS.headerText, fontWeight: 'bold', marginRight: 4 }}>
             Sort by:
-            <select
+            <Dropdown
+              selection
               value={sortKey}
-              onChange={e => setSortKey(e.target.value)}
-              style={{ marginLeft: 8, padding: '0.3rem 0.7rem', borderRadius: 8, border: '1px solid #b08d57', fontSize: '1rem', fontFamily: 'Georgia, serif', color: COLORS.header }}
-            >
-              <option value="BookTitle">Title</option>
-              <option value="Author">Author</option>
-              <option value="PublishedDate">Published Date</option>
-              <option value="Category">Category</option>
-              <option value="ShelfLocation">Shelf Location</option>
-              <option value="ISBN">ISBN</option>
-              <option value="Language">Language</option>
-              <option value="Publisher">Publisher</option>
-              <option value="Edition">Edition</option>
-              <option value="Read">Read</option>
-              <option value="DateAdded">Date Added</option>
-              <option value="DateAcquired">Date Acquired</option>
-              <option value="SubCategory">Subcategory</option>
-              <option value="Editor">Editor</option>
-            </select>
+              onChange={(e, { value }) => setSortKey(value)}
+              options={[
+                { key: 'BookTitle', value: 'BookTitle', text: 'Title' },
+                { key: 'Author', value: 'Author', text: 'Author' },
+                { key: 'PublishedDate', value: 'PublishedDate', text: 'Published Date' },
+                { key: 'Category', value: 'Category', text: 'Category' },
+                { key: 'ShelfLocation', value: 'ShelfLocation', text: 'Shelf Location' },
+                { key: 'ISBN', value: 'ISBN', text: 'ISBN' },
+                { key: 'Language', value: 'Language', text: 'Language' },
+                { key: 'Publisher', value: 'Publisher', text: 'Publisher' },
+                { key: 'Edition', value: 'Edition', text: 'Edition' },
+                { key: 'Read', value: 'Read', text: 'Read' },
+                { key: 'DateAdded', value: 'DateAdded', text: 'Date Added' },
+                { key: 'DateAcquired', value: 'DateAcquired', text: 'Date Acquired' },
+                { key: 'SubCategory', value: 'SubCategory', text: 'Subcategory' },
+                { key: 'Editor', value: 'Editor', text: 'Editor' },
+              ]}
+              style={{ marginLeft: 8, minWidth: 180 }}
+            />
           </label>
-          <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            style={{
-              marginLeft: 4,
-              background: COLORS.header,
-              color: '#fff',
-              border: 'none',
-              borderRadius: 8,
-              padding: '0.3rem 0.7rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontFamily: 'Georgia, serif',
-            }}
-            title={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
-          >
-            {sortOrder === 'asc' ? '▲' : '▼'}
-          </button>
+          <Button.Group size="small" style={{ marginLeft: 4 }}>
+            <Button
+              active={sortOrder === 'asc'}
+              color={sortOrder === 'asc' ? 'purple' : null}
+              onClick={() => setSortOrder('asc')}
+            >
+              asc
+            </Button>
+            <ButtonOr />
+            <Button
+              active={sortOrder === 'desc'}
+              color={sortOrder === 'desc' ? 'purple' : null}
+              onClick={() => setSortOrder('desc')}
+            >
+              desc
+            </Button>
+          </Button.Group>
         </div>
       </div>
       {/* Bookshelf rows */}
       <BookShelf books={sortedBooks} COLORS={COLORS}/>
-      {/* Admin icon */}
-      <div style={{ position: 'fixed', top: 24, right: 32, zIndex: 10 }}>
-        <button
-          onClick={handleAdminClick}
-          title="Admin Panel"
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 0,
-            outline: 'none',
-          }}
-        >
-          <img
-            src="https://img.icons8.com/ios-filled/32/ffffff/user-shield.png"
-            alt="Admin Panel"
-            style={{ width: 28, height: 28 }}
-          />
-        </button>
-      </div>
       {/* Animations */}
       <style>{`
         @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
         .book-cover { transition: transform 0.2s; }
         .book-cover:hover { z-index: 2; }
       `}</style>
+      
+      {/* Admin controls at the bottom */}
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'static', bottom: 0, left: 0, padding: '1.5rem 2.5rem 1.5rem 0', boxSizing: 'border-box' }}>
+        <button
+          onClick={handleAdminClick}
+          title="Admin Panel"
+          style={{
+            background: 'none',
+            border: 'none',
+            color: COLORS.headerText,
+            fontWeight: 'bold',
+            fontSize: '0.8rem',
+            cursor: 'pointer',
+            fontFamily: 'Georgia, serif',
+          }}
+        >
+          Admin controls
+        </button>
+      </div>
     </div>
   );
 }

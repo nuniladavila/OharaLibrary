@@ -37,6 +37,20 @@ export async function getBooksFromDb() {
   });
 }
 
+export async function getBooksWithEmptyPageCountFromDb() {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.all('SELECT * FROM Books WHERE PageCount IS NULL OR PageCount = 0', [], (err, rows) => {
+      if (err) {
+        console.error('SQLite query error:', err);
+        resolve({ error: err.message || 'SQLite query error', details: err });
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 export function addBookToDb(book) {
   return new Promise((resolve, reject) => {
     const db = connectToSqlite();
@@ -94,8 +108,10 @@ export function modifyBookInDb(book) {
         Read = ?,
         DateAdded = ?,
         DateAcquired = ?,
-        ImageLink = ?
-      WHERE id = ?`,
+        ImageLink = ?,
+        PageCount = ?,
+        LastUpdated = ?
+      WHERE ISBN = ?`,
       [
         book.BookTitle,
         book.Author,
@@ -113,7 +129,9 @@ export function modifyBookInDb(book) {
         book.DateAdded,
         book.DateAcquired,
         book.ImageLink,
-        book.id
+        book.PageCount,
+        book.LastUpdated,
+        book.ISBN
       ],
       function(err) {
         if (err) {

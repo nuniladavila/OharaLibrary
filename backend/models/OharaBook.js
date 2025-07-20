@@ -18,6 +18,8 @@ class OharaBook {
    * @param {datetime} params.DateAdded
    * @param {datetime} params.DateAcquired
    * @param {string} params.ImageLink
+   * @param {number} params.PageCount
+   * @param {datetime} params.LastUpdated
    */
 
   constructor(googleBook, batchProps) {
@@ -52,6 +54,7 @@ class OharaBook {
     this.DateAcquired = new Date();
     this.ImageLink = googleBook?.imageLinks?.thumbnail;
     this.PageCount = googleBook?.pageCount || 0;
+    this.LastUpdated = new Date();
   }
 
 }

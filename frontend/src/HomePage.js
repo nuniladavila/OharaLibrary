@@ -3,7 +3,6 @@ import 'semantic-ui-css/semantic.min.css';
 import { Input, Dropdown, Button, ButtonOr } from 'semantic-ui-react';
 import BookShelf from './BookShelf';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/librarynicolilac.png';
 import { COLORS, COOL_FONTS } from './constants'; // Import your color constants
 
 
@@ -111,7 +110,7 @@ function HomePage() {
         {/* <img src={logo} alt="Ohara Library Logo" style={{ height: 100, width: 100, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', background: 'rgba(255,255,255,0.7)' }} /> */}
         {/* <p style={COOL_FONTS['fleur-de-leah']}>Ohara Library</p>
         <p style={COOL_FONTS['rye']}>Ohara Library</p> */}
-        <p style={COOL_FONTS['uncial-antiqua-regular']}>Ohara Library</p>
+        {/* <p style={COOL_FONTS['uncial-antiqua-regular']}>Ohara Library</p> */}
       </header>
       {/* Search and sort controls */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 32, margin: '2rem auto 1.5rem', maxWidth: 900, width: '100%' }}>

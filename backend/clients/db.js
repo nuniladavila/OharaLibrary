@@ -37,6 +37,20 @@ export async function getBooksFromDb() {
   });
 }
 
+export async function getBooksWithEmptyPageCountFromDb() {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.all('SELECT * FROM Books WHERE PageCount IS NULL OR PageCount = 0', [], (err, rows) => {
+      if (err) {
+        console.error('SQLite query error:', err);
+        resolve({ error: err.message || 'SQLite query error', details: err });
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 export function addBookToDb(book) {
   return new Promise((resolve, reject) => {
     const db = connectToSqlite();
@@ -68,6 +82,63 @@ export function addBookToDb(book) {
           reject(err);
         } else {
           resolve({ id: this.lastID, ...book });
+        }
+      }
+    );
+  });
+}
+
+export function modifyBookInDb(book) {
+  return new Promise((resolve, reject) => {
+    const db = connectToSqlite();
+    db.run(
+      `UPDATE Books SET
+        BookTitle = ?,
+        Author = ?,
+        Editor = ?,
+        Category = ?,
+        SubCategory = ?,
+        Publisher = ?,
+        PublishedDate = ?,
+        Edition = ?,
+        Language = ?,
+        ShelfLocation = ?,
+        ISBN = ?,
+        Notes = ?,
+        Read = ?,
+        DateAdded = ?,
+        DateAcquired = ?,
+        ImageLink = ?,
+        PageCount = ?,
+        LastUpdated = ?
+      WHERE ISBN = ?`,
+      [
+        book.BookTitle,
+        book.Author,
+        book.Editor,
+        book.Category,
+        book.SubCategory,
+        book.Publisher,
+        book.PublishedDate,
+        book.Edition,
+        book.Language,
+        book.ShelfLocation,
+        book.ISBN,
+        book.Notes,
+        book.Read ? 1 : 0,
+        book.DateAdded,
+        book.DateAcquired,
+        book.ImageLink,
+        book.PageCount,
+        book.LastUpdated,
+        book.ISBN
+      ],
+      function(err) {
+        if (err) {
+          console.error('Error updating book:', err);
+          reject(err);
+        } else {
+          resolve({ changes: this.changes });
         }
       }
     );

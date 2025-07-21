@@ -4,7 +4,7 @@ import { Input, Dropdown, Button, ButtonOr } from 'semantic-ui-react';
 import BookShelf from './BookShelf';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/librarynicolilac.png';
-import { COLORS } from './constants'; // Import your color constants
+import { COLORS, COOL_FONTS } from './constants'; // Import your color constants
 
 
 function HomePage() {
@@ -73,12 +73,28 @@ function HomePage() {
     <div style={{
       minHeight: '100vh',
       fontFamily: 'Georgia, serif',
-      background: 'linear-gradient(95deg, #d16ba5 0%, #86a8e7 50%, #5ffbf1 100%)',
+      background: 'linear-gradient(120deg, #d16ba5 0%, #86a8e7 50%, #5ffbf1 100%)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
       position: 'relative',
+      overflow: 'hidden',
     }}>
+      {/* Abstract SVG background */}
+      <svg
+        style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }}
+        viewBox="0 0 1440 900"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="bg1" x1="0" y1="0" x2="1440" y2="900" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#d16ba5" />
+            <stop offset="0.5" stopColor="#86a8e7" />
+            <stop offset="1" stopColor="#5ffbf1" />
+          </linearGradient>
+        </defs>
+      </svg>
       {/* Header */}
       <header style={{
         background: 'transparent',
@@ -87,13 +103,15 @@ function HomePage() {
         padding: '1.5rem 0 1rem 0',
         textAlign: 'center',
         letterSpacing: 2,
-        fontFamily: 'Georgia, serif',
-        fontWeight: 700,
+        fontFamily: 'Uncial Antiqua, system-ui',
+        fontWeight: 400,
         borderBottom: 'none',
         transition: 'background 0.3s',
       }}>
-        <img src={logo} alt="Ohara Library Logo" style={{ height: 100, width: 100, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', background: 'rgba(255,255,255,0.7)' }} />
-        Ohara Library
+        {/* <img src={logo} alt="Ohara Library Logo" style={{ height: 100, width: 100, borderRadius: '50%', marginRight: 16, verticalAlign: 'middle', background: 'rgba(255,255,255,0.7)' }} /> */}
+        {/* <p style={COOL_FONTS['fleur-de-leah']}>Ohara Library</p>
+        <p style={COOL_FONTS['rye']}>Ohara Library</p> */}
+        <p style={COOL_FONTS['uncial-antiqua-regular']}>Ohara Library</p>
       </header>
       {/* Search and sort controls */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 32, margin: '2rem auto 1.5rem', maxWidth: 900, width: '100%' }}>

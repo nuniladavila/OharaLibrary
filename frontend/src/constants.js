@@ -20,6 +20,29 @@ export const BOOK_SHELF_CONSTANTS = {
   topBottomBorderWidth: 28,
 };
 
+export const COOL_FONTS = {
+  'fleur-de-leah': {
+    fontFamily: "Fleur De Leah, cursive",
+    fontWeight: 400,
+    fontStyle: "normal",
+  },
+  'rye': {
+    fontFamily: "Rye, cursive",
+    fontWeight: 400,
+    fontStyle: "normal",
+  },
+  'jacquard-24-regular': {
+    fontFamily: "Jacquard 24, system-ui",
+    fontWeight: 400,
+    fontStyle: "normal",
+  },
+  'uncial-antiqua-regular': {
+    fontFamily: "Uncial Antiqua, system-ui",
+    fontWeight: 400,
+    fontStyle: "normal"
+  },
+}
+
 export const GENRE_STYLES = {
   'Spanish Non-Fiction': {
     background: 'linear-gradient(135deg, #b08d57 70%, #c8a2c8 100%)',

@@ -53,6 +53,30 @@ export default function BookForm({ book, onChange, onSubmit, error, success, sub
           readOnly={readOnlyISBN}
           disabled={readOnlyISBN}
         />
+        <Form.Select
+            label="Shelf Location"
+            required
+            value={book && book.ShelfLocation != null ? book.ShelfLocation : ''}
+            onChange={(e, { value }) => onChange('ShelfLocation', value)}
+            options={SHELF_LOCATIONS.map(loc => ({ key: loc, value: loc, text: loc }))}
+        />
+        <Form.Select
+            label="Category"
+            required
+            value={book && book.Category != null ? book.Category : ''}
+            onChange={(e, { value }) => onChange('Category', value)}
+            options={[{ key: 'fiction', value: 'Fiction', text: 'Fiction' }, { key: 'nonfiction', value: 'Non-Fiction', text: 'Non-Fiction' }]}
+        />
+        <Form.Select
+            label="Language"
+            required
+            value={book && book.Language != null ? book.Language : ''}
+            onChange={(e, { value }) => onChange('Language', value)}
+            options={[{ key: 'english', value: 'English', text: 'English' },
+                    { key: 'spanish', value: 'Spanish', text: 'Spanish' },
+                    { key: 'other', value: 'Other', text: 'Other' }
+            ]}
+        />        
       </Form.Group>
       {showAllFields && (
         <>
@@ -69,36 +93,10 @@ export default function BookForm({ book, onChange, onSubmit, error, success, sub
             />
           </Form.Group>
           <Form.Group widths="equal">
-            <Form.Select
-              label="Shelf Location"
-              required
-              value={book && book.ShelfLocation != null ? book.ShelfLocation : ''}
-              onChange={(e, { value }) => onChange('ShelfLocation', value)}
-              options={SHELF_LOCATIONS.map(loc => ({ key: loc, value: loc, text: loc }))}
-            />
-            <Form.Select
-              label="Category"
-              required
-              value={book && book.Category != null ? book.Category : ''}
-              onChange={(e, { value }) => onChange('Category', value)}
-              options={[{ key: 'fiction', value: 'Fiction', text: 'Fiction' }, { key: 'nonfiction', value: 'Non-Fiction', text: 'Non-Fiction' }]}
-            />
             <Form.Input
               label="SubCategory"
               value={book && book.SubCategory != null ? book.SubCategory : ''}
               onChange={e => onChange('SubCategory', e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group widths="equal">
-            <Form.Select
-              label="Language"
-              required
-              value={book && book.Language != null ? book.Language : ''}
-              onChange={(e, { value }) => onChange('Language', value)}
-              options={[{ key: 'english', value: 'English', text: 'English' },
-                        { key: 'spanish', value: 'Spanish', text: 'Spanish' },
-                        { key: 'other', value: 'Other', text: 'Other' }
-              ]}
             />
             <Form.Input
               label="Publisher"

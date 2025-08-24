@@ -104,12 +104,12 @@ export default function BooksAdminPane({ books, setBooks }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Failed to save book');
         // If batch mode and book not found, show all fields for manual entry
-        if (addMode && addModeType === 'Batch' && data && data.showManualFields) {
+        if (addMode && addModeType === 'Batch') {
           setFormBook(prev => ({ ...prev, ...data.bookData }));
           setAddModeType("Manual");
         }
+        else setError(data.error || 'Failed to save book');
         return;
       }
       setSuccess(addMode ? 'Book added successfully!' : 'Book updated successfully!');

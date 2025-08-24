@@ -14,8 +14,9 @@ async function addBookByISBN(bookData) {
     const bookInfo = await getBookInfoByISBN(bookData.isbn);
 
     if (!bookInfo) {
-      console.error('Book not found');
-      throw new Error('Book not found');
+      console.warn('Book not found');
+      // Do not throw, just return null
+      return null;
     }
 
     const oharaBookToAdd = new OharaBook(bookInfo, bookData);

@@ -15,7 +15,7 @@ export default function AdminSidebar({ activePane, setActivePane }) {
       boxShadow: '2px 0 12px #a084ca22',
     }}>
       <img src={require('../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%' }} />
-      <h1>Ohara Library</h1>
+      <h2>Ohara Library</h2>
       <div style={{ width: '100%' }}>
         <SidebarButton label="Dashboard" active={activePane === 'dashboard'} onClick={() => setActivePane('dashboard')} icon={"dashboard"} />
         <SidebarButton label="Books" active={activePane === 'books'} onClick={() => setActivePane('books')} icon={"book"}/>

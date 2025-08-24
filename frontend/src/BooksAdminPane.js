@@ -4,29 +4,13 @@ import BookSearchList from './BookSearchList';
 import { Icon, Button, ButtonGroup } from 'semantic-ui-react';
 
 
-export default function BooksAdminPane() {
-  const [books, setBooks] = useState([]);
+export default function BooksAdminPane({ books, setBooks }) {
   const [search, setSearch] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [addMode, setAddMode] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  useEffect(() => {
-      fetch('/api/books')
-        .then(res => res.json())
-        .then(data => {
-          const withThumbnails = data.map(book => ({
-            ...book,
-            thumbnail: book.ImageLink,
-          }));
-          setBooks(withThumbnails);
-        })
-        .catch(error => {
-          console.error('Error fetching books:', error);
-        });
-    }, []);
 
   const filteredBooks = books.filter(book => {
     const keyword = search.toLowerCase();

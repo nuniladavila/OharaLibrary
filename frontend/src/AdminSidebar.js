@@ -1,7 +1,9 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function AdminSidebar({ activePane, setActivePane }) {
+export default function AdminSidebar() {
+  const location = useLocation();
   return (
     <div style={{
       width: 180,
@@ -17,40 +19,38 @@ export default function AdminSidebar({ activePane, setActivePane }) {
       <img src={require('../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%' }} />
       <h2>Ohara Library</h2>
       <div style={{ width: '100%' }}>
-        <SidebarButton label="Dashboard" active={activePane === 'dashboard'} onClick={() => setActivePane('dashboard')} icon={"dashboard"} />
-        <SidebarButton label="Books" active={activePane === 'books'} onClick={() => setActivePane('books')} icon={"book"}/>
+        <SidebarButton label="Dashboard" to="/admin-panel/dashboard" active={location.pathname === '/admin-panel/dashboard'} icon={"dashboard"} />
+        <SidebarButton label="Books" to="/admin-panel/books" active={location.pathname === '/admin-panel/books'} icon={"book"}/>
       </div>
       <div style={{ flex: 1 }} />
-      <SidebarButton label="Settings" active={activePane === 'settings'} onClick={() => setActivePane('settings')} icon={"setting"} />
+      <SidebarButton label="Settings" to="#" active={false} icon={"setting"} />
     </div>
   );
 }
 
-function SidebarButton({ label, active, onClick, icon }) {
+function SidebarButton({ label, to, active, icon }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        width: '100%',
-        background: active ? '#fff' : 'transparent',
-        color: active ? '#7c4dff' : '#fff',
-        border: 'none',
-        padding: '1rem 0',
-        fontWeight: active ? 700 : 500,
-        fontSize: 16,
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        borderRadius: 8,
-        marginBottom: 8,
-        boxShadow: active ? '0 2px 8px #a084ca22' : undefined,
-        transition: 'background 0.2s, color 0.2s',
-      }}
-    >
+    <Link to={to} style={{
+      width: '100%',
+      background: active ? '#fff' : 'transparent',
+      color: active ? '#7c4dff' : '#fff',
+      border: 'none',
+      padding: '1rem 0',
+      fontWeight: active ? 700 : 500,
+      fontSize: 16,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      borderRadius: 8,
+      marginBottom: 8,
+      boxShadow: active ? '0 2px 8px #a084ca22' : undefined,
+      transition: 'background 0.2s, color 0.2s',
+      textDecoration: 'none',
+    }}>
       <span><Icon name={icon} /></span>
       {label}
-    </button>
+    </Link>
   );
 }

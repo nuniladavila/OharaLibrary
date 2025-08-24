@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import BooksAdminPane from './BooksAdminPane';
 import AdminDashboardPane from './AdminDashboardPane';
@@ -23,14 +23,17 @@ function AdminPanel() {
       });
   }, []);
 
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f3e8ff' }}>
-      <AdminSidebar activePane={activePane} setActivePane={setActivePane} />
-      <div style={{ flex: 1, background: '#f8f6fc', minHeight: '100vh', boxShadow: '0 0 24px #a084ca22', overflow: 'auto' }}>
-        {activePane === 'dashboard' && <AdminDashboardPane books={books} />}
-        {activePane === 'books' && <BooksAdminPane books={books} setBooks={setBooks} />}
+    return (
+      <div style={{ display: 'flex', minHeight: '100vh', background: '#f3e8ff' }}>
+        <AdminSidebar />
+        <div style={{ flex: 1, background: '#f8f6fc', minHeight: '100vh', boxShadow: '0 0 24px #a084ca22', overflow: 'auto' }}>
+          <Routes>
+            <Route path="dashboard" element={<AdminDashboardPane books={books} />} />
+            <Route path="books" element={<BooksAdminPane books={books} setBooks={setBooks} />} />
+            <Route path="/" element={<Navigate to="dashboard" replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
   );
 }
 

@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/admin-panel" element={<AdminPanel />} />
+      <Route path="/admin-panel/*" element={<AdminPanel />} />
     </Routes>
   );
 }

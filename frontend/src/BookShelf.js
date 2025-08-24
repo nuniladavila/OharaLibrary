@@ -68,14 +68,15 @@ const BookShelf = ({ books = [], COLORS}) => {
               className="shelf-row"
               style={{
                 display: 'flex',
-                alignItems: 'flex-end',
-                paddingTop: '1.5rem',
-                overflowX: 'hidden',
-                overflowY: 'hidden',
-                position: 'relative',
-                minHeight: defaultShelfHeight,
-                border: `4px solid ${COLORS.bookshelfColorWood}`, // brown border for wood effect
-                background: 'rgba(74, 55, 26, 0.45)', // more transparent wood background
+                  alignItems: 'flex-end',
+                  justifyContent: 'center', // Centralize books in the row
+                  paddingTop: '1.5rem',
+                  overflowX: 'hidden',
+                  overflowY: 'hidden',
+                  position: 'relative',
+                  minHeight: defaultShelfHeight,
+                  border: `4px solid ${COLORS.bookshelfColorWood}`, // brown border for wood effect
+                  background: 'rgba(74, 55, 26, 0.45)', // more transparent wood background
               }}
             >
               {row.map(book => (

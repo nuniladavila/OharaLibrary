@@ -166,6 +166,10 @@ function HomePage() {
           </Button.Group>
         </div>
       </div>
+      {/* Total book count statistic */}
+      <div style={{ textAlign: 'center', margin: '1rem 0', fontSize: '1.3rem', fontWeight: 600, color: COLORS.headerText }}>
+        Total Books: {books.length}
+      </div>
       {/* Bookshelf rows */}
       <BookShelf books={sortedBooks} COLORS={COLORS}/>
       {/* Animations */}

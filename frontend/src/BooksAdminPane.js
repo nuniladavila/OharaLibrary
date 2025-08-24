@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from 'react';
+import BookForm from './BookForm';
+import BookSearchList from './BookSearchList';
+import { Icon, Button, ButtonGroup } from 'semantic-ui-react';
+
+
+export default function BooksAdminPane() {
+  const [books, setBooks] = useState([]);
+  const [search, setSearch] = useState('');
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [addMode, setAddMode] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+      fetch('/api/books')
+        .then(res => res.json())
+        .then(data => {
+          const withThumbnails = data.map(book => ({
+            ...book,
+            thumbnail: book.ImageLink,
+          }));
+          setBooks(withThumbnails);
+        })
+        .catch(error => {
+          console.error('Error fetching books:', error);
+        });
+    }, []);
+
+  const filteredBooks = books.filter(book => {
+    const keyword = search.toLowerCase();
+    return (
+      (book.BookTitle && book.BookTitle.toLowerCase().includes(keyword)) ||
+      (book.Author && book.Author.toLowerCase().includes(keyword)) ||
+      (book.ISBN && String(book.ISBN).includes(keyword))
+    );
+  });
+
+  const handleEdit = (book) => {
+    setSelectedBook(book);
+    setEditMode(true);
+    setAddMode(false);
+    setError('');
+    setSuccess('');
+  };
+
+  const handleDelete = async (book) => {
+    setError('');
+    setSuccess('');
+    const password = localStorage.getItem('ohara_admin_pwd') || '';
+    try {
+      const res = await fetch(`/api/books/${book.Id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-password': password },
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || 'Failed to delete book');
+        return;
+      }
+      setSuccess('Book deleted successfully!');
+      setBooks(books.filter(b => b.Id !== book.Id));
+      setSelectedBook(null);
+      setEditMode(false);
+    } catch (err) {
+      setError('Network error');
+    }
+  };
+
+  const handleAdd = () => {
+    setAddMode(true);
+    setEditMode(false);
+    setSelectedBook(null);
+    setError('');
+    setSuccess('');
+  };
+
+  const handleFormSubmit = async (bookData) => {
+    setError('');
+    setSuccess('');
+    const password = localStorage.getItem('ohara_admin_pwd') || '';
+    const method = addMode ? 'POST' : 'PUT';
+    const url = addMode ? '/api/books' : '/api/books';
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': password,
+        },
+        body: JSON.stringify({ bookData }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || 'Failed to save book');
+        return;
+      }
+      setSuccess(addMode ? 'Book added successfully!' : 'Book updated successfully!');
+      setAddMode(false);
+      setEditMode(false);
+      setSelectedBook(null);
+      // Refresh books
+      fetch('/api/books')
+        .then(res => res.json())
+        .then(data => setBooks(data));
+    } catch (err) {
+      setError('Network error');
+    }
+  };
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by title, author, or ISBN..."
+          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #a084ca', background: '#f3e8ff', marginRight: 16 }}
+        />
+        <Button
+          color='violet'
+          icon='plus'
+          content='Add Book'
+          onClick={handleAdd}
+          style={{ fontWeight: 'bold', fontSize: '1.1rem' }}
+        />
+      </div>
+      {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ color: 'green', marginBottom: 12 }}>{success}</div>}
+      {!editMode && !addMode && (
+        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #a084ca22', padding: '1rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: '#f3e8ff' }}>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Item</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Category</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Author</th>
+                <th style={{ textAlign: 'center', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredBooks.map(book => (
+                <tr key={book.Id || book.ISBN} style={{ borderBottom: '1px solid #eee' }}>
+                  <td style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', gap: 12 }}>
+                    {/* Book cover image or placeholder */}
+                    {book.thumbnail ? (
+                      <img
+                        src={book.thumbnail}
+                        alt={book.BookTitle}
+                        style={{ width: 48, height: 64, objectFit: 'cover', borderRadius: 8, marginRight: 8, boxShadow: '0 2px 8px #a084ca22' }}
+                      />
+                    ) : (
+                      <div style={{ width: 48, height: 64, background: '#eee', borderRadius: 8, overflow: 'hidden', marginRight: 8 }} />
+                    )}
+                    <span>{book.BookTitle}</span>
+                  </td>
+                  <td style={{ padding: '0.75rem' }}>
+                    {book.Category && Array.isArray(book.SubCategory)
+                      ? book.SubCategory.map(cat => (
+                          <span key={cat} style={{ background: '#7c4dff', color: '#fff', borderRadius: 8, padding: '2px 8px', marginRight: 4, fontSize: 12, fontWeight: 500 }}>{cat}</span>
+                        ))
+                      : null}
+                  </td>
+                  <td style={{ padding: '0.75rem' }}>{book.Author}</td>
+                  <td style={{ padding: '0.75rem', textAlign: 'center' }}>
+                    <ButtonGroup>
+                        <Button icon>
+                            <Icon name='edit' title='Edit' onClick={() => handleEdit(book)} />
+                        </Button>
+                        <Button icon>
+                            <Icon name='trash alternate' title='Delete' onClick={() => handleDelete(book)}/>
+                        </Button>
+                    </ButtonGroup>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {(editMode || addMode) && (
+        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #a084ca22', padding: '2rem', marginTop: 24 }}>
+          <BookForm
+            book={editMode ? selectedBook : null}
+            onSubmit={handleFormSubmit}
+            error={error}
+            success={success}
+            submitLabel={addMode ? 'Add Book' : 'Update Book'}
+            readOnlyISBN={!addMode}
+          />
+        </div>
+      )}
+    </div>
+  );
+}

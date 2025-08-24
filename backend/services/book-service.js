@@ -9,17 +9,20 @@ import OharaBook from '../models/OharaBook.js';
  * @param {AddBookRequest} bookData - Request object containing isbn and batch props
  * @returns {Promise<Object|null>} - Book info object or null if not found
  */
-async function addBookByISBN(bookData) {
+async function addBookByISBN(bookData, isManualMode) {
   try {
     const bookInfo = await getBookInfoByISBN(bookData.isbn);
 
     if (!bookInfo) {
-      console.warn('Book not found');
-      // Do not throw, just return null
-      return null;
+      console.warn('Book not found in Google Books');
     }
 
-    const oharaBookToAdd = new OharaBook(bookInfo, bookData);
+    if (!bookInfo && !isManualMode) {
+      console.warn('Returning to user.');
+      throw new Error('Book not found in Google Books');
+    }
+
+    const oharaBookToAdd = bookInfo ? OharaBook.fromGoogleBook(bookInfo, bookData) : OharaBook.fromManualEntry(bookData);
 
     console.log('Adding book to database:', oharaBookToAdd);
 

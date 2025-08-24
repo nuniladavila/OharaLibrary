@@ -25,6 +25,7 @@ router.get('/', async (req, res) => {
 router.post('/', (req, res) => {
   const { bookData } = req.body;
   const password = req.headers['x-admin-password'];
+  const inputMode = req.headers['x-input-mode'];
 
   console.log("Received book data:", bookData);
 
@@ -32,12 +33,13 @@ router.post('/', (req, res) => {
     return res.status(401).json({ error: 'Unauthorized: Invalid password' });
   }
 
-  const { isbn, category, shelfLocation } = bookData;
-  if (!isbn || !category || !shelfLocation) {
+  const { ISBN, Category, ShelfLocation } = bookData;
+  if (!ISBN || !Category || !ShelfLocation) {
     return res.status(400).json({ error: 'Missing required book fields' });
   }
 
-  addBookByISBN(bookData)
+  const isManualMode = inputMode == "Manual";
+  addBookByISBN(bookData, isManualMode)
     .then(result => {
       res.status(201).json(result);
     })
@@ -53,9 +55,9 @@ router.put('/bulkedit', (req, res) => {
 
   console.log("Received bulk edit request");
 
-  // if (!password || password !== process.env.ADMIN_PWD) {
-  //   return res.status(401).json({ error: 'Unauthorized: Invalid password' });
-  // }
+  if (!password || password !== process.env.ADMIN_PWD) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid password' });
+  }
 
   bulkEditBooks()
     .then(result => {
@@ -70,45 +72,23 @@ router.put('/bulkedit', (req, res) => {
 // PUT /api/books/:isbn
 router.put('/:isbn', (req, res) => {
   const { isbn } = req.params;
+  const { bookData } = req.body;
   const password = req.headers['x-admin-password'];
 
-  // if (!password || password !== process.env.ADMIN_PWD) {
-  //   return res.status(401).json({ error: 'Unauthorized: Invalid password' });
-  // }
+  if (!password || password !== process.env.ADMIN_PWD) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid password' });
+  }
 
   if (!isbn) {
     return res.status(400).json({ error: 'ISBN is required' });
   }
 
-  modifyBookInDb(req.body)
+  modifyBookInDb(bookData)
     .then(result => {
       res.json(result);
     })
     .catch(err => {
       console.error('Error modifying book:', err);
-      res.status(500).json({ error: err.message });
-    });
-});
-
-
-// PUT /api/books/:isbn/google
-router.put('/:isbn/google', (req, res) => {
-  const { isbn } = req.params;
-  const password = req.headers['x-admin-password'];
-
-  // if (!password || password !== process.env.ADMIN_PWD) {
-  //   return res.status(401).json({ error: 'Unauthorized: Invalid password' });
-  // }
-
-  if (!isbn) {
-    return res.status(400).json({ error: 'ISBN is required' });
-  }
-  addInfoToExistingBookByIsbn(isbn)
-    .then(result => {
-      res.json(result);
-    })
-    .catch(err => {
-      console.error('Error adding book Google info:', err);
       res.status(500).json({ error: err.message });
     });
 });

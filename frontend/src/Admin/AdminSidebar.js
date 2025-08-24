@@ -16,7 +16,7 @@ export default function AdminSidebar() {
       paddingTop: 32,
       boxShadow: '2px 0 12px #a084ca22',
     }}>
-      <img src={require('../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%' }} />
+  <img src={require('../../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%' }} />
       <h2>Ohara Library</h2>
       <div style={{ width: '100%' }}>
         <SidebarButton label="Dashboard" to="/admin-panel/dashboard" active={location.pathname === '/admin-panel/dashboard'} icon={"dashboard"} />

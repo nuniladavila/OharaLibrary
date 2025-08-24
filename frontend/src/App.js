@@ -2,7 +2,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
-import AdminPanel from './AdminPanel';
+import AdminPanel from './Admin/AdminPanel';
 
 function App() {
   return (

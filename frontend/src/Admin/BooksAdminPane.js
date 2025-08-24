@@ -1,4 +1,18 @@
 import React, { useState, useEffect } from 'react';
+const EMPTY_BOOK = {
+  BookTitle: '',
+  Author: '',
+  ISBN: '',
+  ShelfLocation: '',
+  Category: '',
+  SubCategory: '',
+  Language: '',
+  Publisher: '',
+  PublishedDate: '',
+  PageCount: '',
+  Read: '',
+  DateAcquired: ''
+};
 import BookForm from './BookForm';
 import BookSearchList from './BookSearchList';
 import { Icon, Button, ButtonGroup } from 'semantic-ui-react';
@@ -9,8 +23,10 @@ export default function BooksAdminPane({ books, setBooks }) {
   const [selectedBook, setSelectedBook] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [addMode, setAddMode] = useState(false);
+  const [addModeType, setAddModeType] = useState(null); // 'Batch' or 'Manual'
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [formBook, setFormBook] = useState(EMPTY_BOOK);
 
   const filteredBooks = books.filter(book => {
     const keyword = search.toLowerCase();
@@ -23,6 +39,7 @@ export default function BooksAdminPane({ books, setBooks }) {
 
   const handleEdit = (book) => {
     setSelectedBook(book);
+    setFormBook(book ? { ...book } : EMPTY_BOOK);
     setEditMode(true);
     setAddMode(false);
     setError('');
@@ -55,9 +72,16 @@ export default function BooksAdminPane({ books, setBooks }) {
   const handleAdd = () => {
     setAddMode(true);
     setEditMode(false);
+    setAddModeType(null);
+    setBatchSearchDone(false);
     setSelectedBook(null);
+    setFormBook({ ...EMPTY_BOOK });
     setError('');
     setSuccess('');
+  };
+  // Handles input changes in BookForm
+  const handleFormChange = (field, value) => {
+    setFormBook(prev => ({ ...prev, [field]: value }));
   };
 
   const handleFormSubmit = async (bookData) => {
@@ -65,24 +89,33 @@ export default function BooksAdminPane({ books, setBooks }) {
     setSuccess('');
     const password = localStorage.getItem('ohara_admin_pwd') || '';
     const method = addMode ? 'POST' : 'PUT';
-    const url = addMode ? '/api/books' : '/api/books';
+  const url = addMode ? '/api/books' : `/api/books/${bookData.ISBN}`;
+
+    console.log(method, url)
     try {
       const res = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
           'x-admin-password': password,
+          'x-input-mode': addModeType || 'Manual'
         },
         body: JSON.stringify({ bookData }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || 'Failed to save book');
+        // If batch mode and book not found, show all fields for manual entry
+        if (addMode && addModeType === 'Batch' && data && data.showManualFields) {
+          setFormBook(prev => ({ ...prev, ...data.bookData }));
+          setAddModeType("Manual");
+        }
         return;
       }
       setSuccess(addMode ? 'Book added successfully!' : 'Book updated successfully!');
       setAddMode(false);
       setEditMode(false);
+      setAddModeType(null);
       setSelectedBook(null);
       // Refresh books
       fetch('/api/books')
@@ -166,14 +199,34 @@ export default function BooksAdminPane({ books, setBooks }) {
       )}
       {(editMode || addMode) && (
         <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #a084ca22', padding: '2rem', marginTop: 24 }}>
-          <BookForm
-            book={editMode ? selectedBook : null}
-            onSubmit={handleFormSubmit}
-            error={error}
-            success={success}
-            submitLabel={addMode ? 'Add Book' : 'Update Book'}
-            readOnlyISBN={!addMode}
-          />
+          {addMode && !addModeType && (
+            <div style={{ marginBottom: 24 }}>
+              <label style={{ fontWeight: 'bold', marginRight: 16 }}>Add Mode:</label>
+              <Button color={addModeType === 'Manual' ? 'violet' : undefined} onClick={() => setAddModeType('Manual')}>Manual</Button>
+              <Button color={addModeType === 'Batch' ? 'violet' : undefined} onClick={() => setAddModeType('Batch')}>Batch</Button>
+            </div>
+          )}
+          {((addMode && addModeType) || editMode) && (
+            <BookForm
+              book={formBook}
+              onChange={handleFormChange}
+              onSubmit={() => handleFormSubmit(formBook)}
+              error={error}
+              success={success}
+              submitLabel={addMode ? 'Add Book' : 'Update Book'}
+              readOnlyISBN={editMode}
+              onCancel={() => {
+                setEditMode(false);
+                setAddMode(false);
+                setAddModeType(null);
+                setSelectedBook(null);
+                setFormBook(EMPTY_BOOK);
+                setError('');
+                setSuccess('');
+              }}
+              addModeType={addModeType}
+            />
+          )}
         </div>
       )}
     </div>

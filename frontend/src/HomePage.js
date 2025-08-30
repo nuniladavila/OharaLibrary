@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import WAVES from 'vanta/dist/vanta.waves.min';
+import FOG from 'vanta/dist/vanta.fog.min';
+import TRUNK from 'vanta/dist/vanta.trunk.min';
+import * as THREE from 'three';
+import p5 from 'p5';
 import 'semantic-ui-css/semantic.min.css';
-import { Input, Dropdown, Button, ButtonOr, Grid, Image } from 'semantic-ui-react';
+import { Input, Dropdown, Button, ButtonOr, Grid, Image, Card, Icon } from 'semantic-ui-react';
 // import BookShelf from './BookShelf';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/librarynicolilac.png';
@@ -14,6 +19,8 @@ function HomePage() {
   const [sortKey, setSortKey] = useState('ShelfLocation');
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
+  const vantaRef = useRef(null);
+  const vantaEffectRef = useRef(null);
 
   useEffect(() => {
     fetch('/api/books')
@@ -28,6 +35,33 @@ function HomePage() {
       .catch(error => {
         console.error('Error fetching books:', error);
       });
+  }, []);
+
+  // Vanta.js background setup
+  useEffect(() => {
+    if (!vantaEffectRef.current) {
+      vantaEffectRef.current = FOG({
+        el: vantaRef.current,
+        THREE,    
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        // highlightColor: 0xf2c443,
+        // midtoneColor: 0xcf4d43,
+        // lowlightColor: 0x6f63bb,
+        // baseColor: 0xf5e0e0,
+        speed: 1.50
+        // zoom: 0.85,
+      });
+    }
+    return () => {
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy();
+        vantaEffectRef.current = null;
+      }
+    };
   }, []);
 
   const filteredBooks = Array.isArray(books) ? books.filter(book => {
@@ -71,161 +105,161 @@ function HomePage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      fontFamily: 'Georgia, serif',
-      background: 'rgb(195, 75, 25)',
-      // background: 'linear-gradient(120deg, #4b2e09 0%, #7c5a2a 50%, #a0844a 100%)', // dark brown tones
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Header */}
-  <div style={{ width: '100vw', paddingTop: '0', paddingBottom: '0', position: 'relative', zIndex: 1, height: 250, overflow: 'hidden' }}>
-    {/* SVG with image fill for organic curve */}
-    <svg
-      viewBox="0 0 1920 250"
-      width="100vw"
-      height="250"
-      style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: 250, zIndex: 1 }}
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <pattern id="bannerPattern" patternUnits="userSpaceOnUse" width="1920" height="250">
-          <image href={require('../assets/oharalibrarybanner.png')} x="0" y="0" width="1920" height="250" preserveAspectRatio="xMidYMid slice" />
-        </pattern>
-      </defs>
-      <path
-        d="M0,0 H1920 V180 Q1600,250 1200,220 Q900,200 600,240 Q300,260 0,180 Z"
-        fill="url(#bannerPattern)"
-      />
-    </svg>
-    <div style={{
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -40%)',
-      width: '100%',
-      textAlign: 'center',
-      zIndex: 2,
-      pointerEvents: 'none',
-    }}>
-      <span style={{
-        ...COOL_FONTS['uncial-antiqua-regular'],
-        fontSize: '4.5rem',
-        color: COLORS.headerText,
-        fontWeight: 400,
-        letterSpacing: 2,
-        textShadow: '0 2px 8px #a084ca88',
-        borderRadius: 8,
-        padding: '0.5rem 2rem',
-        marginTop: '-2rem',
-        display: 'inline-block',
-        zIndex: 2
+    <>
+      <div ref={vantaRef} style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+      }} />
+      <div style={{
+        minHeight: '100vh',
+        fontFamily: 'Georgia, serif',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        zIndex: 1,
       }}>
-        Ohara Library
-      </span>
-    </div>
-  </div>
-      {/* Search and sort controls in a single row */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 24, margin: '2rem auto 2rem auto', width: '100%' }}>
-        <Input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search by title, author, or year..."
-          style={{ width: 320 }}
-        />
-        <label style={{ color: COLORS.headerText, fontWeight: 'bold', marginRight: 4 }}>
-          Sort by:
-          <Dropdown
-            selection
-            value={sortKey}
-            onChange={(e, { value }) => setSortKey(value)}
-            options={[
-              { key: 'BookTitle', value: 'BookTitle', text: 'Title' },
-              { key: 'Author', value: 'Author', text: 'Author' },
-              { key: 'PublishedDate', value: 'PublishedDate', text: 'Published Date' },
-              { key: 'Category', value: 'Category', text: 'Category' },
-              { key: 'ShelfLocation', value: 'ShelfLocation', text: 'Shelf Location' },
-              { key: 'ISBN', value: 'ISBN', text: 'ISBN' },
-              { key: 'Language', value: 'Language', text: 'Language' },
-              { key: 'Publisher', value: 'Publisher', text: 'Publisher' },
-              { key: 'Edition', value: 'Edition', text: 'Edition' },
-              { key: 'Read', value: 'Read', text: 'Read' },
-              { key: 'DateAdded', value: 'DateAdded', text: 'Date Added' },
-              { key: 'DateAcquired', value: 'DateAcquired', text: 'Date Acquired' },
-              { key: 'SubCategory', value: 'SubCategory', text: 'Subcategory' },
-              { key: 'Editor', value: 'Editor', text: 'Editor' },
-            ]}
-            style={{ marginLeft: 8, minWidth: 180 }}
-          />
-        </label>
-        <Button.Group size="small" style={{ marginLeft: 4 }}>
-          <Button
-            active={sortOrder === 'asc'}
-            color={sortOrder === 'asc' ? 'purple' : null}
-            onClick={() => setSortOrder('asc')}
+        {/* Admin icon */}
+        <Icon link name='lemon' className="lemon-icon" onClick={handleAdminClick} style={{ position: "absolute", right: "1.25rem", top: "1.25rem", color:"white", zIndex: 2 }}/>
+        <style>{`
+          @media (max-width: 600px) {
+            .hide-on-mobile {
+              display: none !important;
+            }
+            .lemon-icon {
+              right: 2.25rem !important;
+            }
+          }
+        `}</style>
+
+        <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: "2rem", marginTop: "3rem"}}>
+          <span
+            style={{
+              ...COOL_FONTS['uncial-antiqua-regular'],
+              fontSize: '3.2rem',
+              color: COLORS.headerText,
+              fontWeight: 400,
+              letterSpacing: 2,
+              padding: '0.5rem 2.5rem',
+              display: 'inline-block',
+              minWidth: 220,
+              maxWidth: '100%',
+              wordBreak: 'break-word',
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1,
+              background: 'none',
+              border: 'none',
+              boxShadow: 'none',
+            }}
           >
-            asc
-          </Button>
-          <ButtonOr />
-          <Button
-            active={sortOrder === 'desc'}
-            color={sortOrder === 'desc' ? 'purple' : null}
-            onClick={() => setSortOrder('desc')}
-          >
-            desc
-          </Button>
-        </Button.Group>
-      </div>
+            Ohara Library
+          </span>
+        </div>
         
-      {/* Total book count statistic */}
-      <div style={{ textAlign: 'center', margin: '1rem 0', fontSize: '1.3rem', fontWeight: 600, color: COLORS.headerText }}>
-        Total Books: {books.length}
-      </div>
-      {/* Book rows using Semantic UI Grid, only images, closer together, with placeholder */}
-      <div style={{ width: '100%', margin: '1rem 0', padding:'0 1rem' }}>
-        {sortedBooks.length > 0 ? (
-          <Grid doubling stackable columns={10} centered style={{ rowGap: '0.25rem' }}>
-            {sortedBooks.map(book => (
-              <Grid.Column key={book.Id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <BookShelfItem title={book.BookTitle} coverImage={book.thumbnail} fontFamily={'Georgia, serif'}/> 
-              </Grid.Column>
-            ))}
-          </Grid>
-        ) : (
-          <div style={{ color: COLORS.headerText, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #e0c3fc' }}>No books found.</div>
-        )}
-      </div>
-      {/* Animations */}
-      <style>{`
-        @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
-        .book-cover { transition: transform 0.2s; }
-        .book-cover:hover { z-index: 2; }
-      `}</style>
-      
-      {/* Admin controls at the bottom */}
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'static', bottom: 0, left: 0, padding: '1.5rem 2.5rem 1.5rem 0', boxSizing: 'border-box' }}>
-        <button
-          onClick={handleAdminClick}
-          title="Admin Panel"
+        {/* Responsive controls */}
+        <div
           style={{
-            background: 'none',
-            border: 'none',
-            color: COLORS.headerText,
-            fontWeight: 'bold',
-            fontSize: '0.8rem',
-            cursor: 'pointer',
-            fontFamily: 'Georgia, serif',
+            width: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 16,
+            marginTop: '2rem',
+            marginBottom: '1.5rem',
           }}
         >
-          Admin controls
-        </button>
+          <Input
+            icon={<Icon name='search'/>}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by title, author, or year..."
+            style={{ minWidth: 180, maxWidth: 320, flex: '1 1 180px' }}
+          />
+          <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Dropdown
+              selection
+              value={sortKey}
+              onChange={(e, { value }) => setSortKey(value)}
+              options={[
+                { key: 'BookTitle', value: 'BookTitle', text: 'Title' },
+                { key: 'Author', value: 'Author', text: 'Author' },
+                { key: 'PublishedDate', value: 'PublishedDate', text: 'Published Date' },
+                { key: 'Category', value: 'Category', text: 'Category' },
+                { key: 'ShelfLocation', value: 'ShelfLocation', text: 'Shelf Location' },
+                { key: 'ISBN', value: 'ISBN', text: 'ISBN' },
+                { key: 'Language', value: 'Language', text: 'Language' },
+                { key: 'Publisher', value: 'Publisher', text: 'Publisher' },
+                { key: 'Edition', value: 'Edition', text: 'Edition' },
+                { key: 'Read', value: 'Read', text: 'Read' },
+                { key: 'DateAdded', value: 'DateAdded', text: 'Date Added' },
+                { key: 'DateAcquired', value: 'DateAcquired', text: 'Date Acquired' },
+                { key: 'SubCategory', value: 'SubCategory', text: 'Subcategory' },
+                { key: 'Editor', value: 'Editor', text: 'Editor' },
+              ]}
+              style={{ marginLeft: 8, minWidth: 120, maxWidth: 180 }}
+            />
+            <Button.Group size="small" style={{ marginLeft: 4 }}>
+              <Button
+                active={sortOrder === 'asc'}
+                color={sortOrder === 'asc' ? 'purple' : null}
+                onClick={() => setSortOrder('asc')}
+              >
+                asc
+              </Button>
+              <ButtonOr />
+              <Button
+                active={sortOrder === 'desc'}
+                color={sortOrder === 'desc' ? 'purple' : null}
+                onClick={() => setSortOrder('desc')}
+              >
+                desc
+              </Button>
+            </Button.Group>
+          </div>
+        </div>
+        <style>{`
+          @media (max-width: 600px) {
+            .hide-on-mobile {
+              display: none !important;
+            }
+          }
+        `}</style>
+          
+        {/* Total book count statistic */}
+        <div style={{ textAlign: 'center', margin: '1rem 0', fontSize: '1.3rem', fontWeight: 600, color: COLORS.headerText }}>
+          Total Books: {books.length}
+        </div>
+        {/* Book images grid */}
+        <div style={{ width: '100%', margin: '1rem 0', display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center' }}>
+          {sortedBooks.length > 0 ? (
+            <>
+              {sortedBooks.map(book => (
+                <Image 
+                  key={book.Id}
+                  src={book.thumbnail ? book.thumbnail : `https://placehold.co/110x170?text=${encodeURIComponent(book.BookTitle)}`}
+                  style={{ width: 100, height: 150, borderRadius: 4 }} 
+                />
+              ))}
+            </>
+          ) : (
+            <div style={{ color: COLORS.headerText, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #e0c3fc' }}>No books found.</div>
+          )}
+        </div>
+        {/* Animations */}
+        <style>{`
+          @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
+          .book-cover { transition: transform 0.2s; }
+          .book-cover:hover { z-index: 2; }
+        `}</style>
       </div>
-    </div>
+    </>
   );
 }
 

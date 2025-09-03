@@ -14,7 +14,7 @@ export default function AdminSidebar() {
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 32,
-      borderRadius: '0 10px 10px 0'
+      borderRadius: '0 90px 90px 0'
     }}>
   <Link to="/">
     <img src={require('../../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%', cursor: 'pointer' }} />
@@ -34,7 +34,7 @@ function SidebarButton({ label, to, active, icon }) {
   return (
     <Link to={to} style={{
       width: '100%',
-      background: active ? 'rgb(255, 245, 245)' : 'transparent',
+      background: active ? 'white' : 'transparent',
       color: active ? '#FF7043' : '#fff',
       border: 'none',
       padding: '1rem 0',

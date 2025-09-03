@@ -144,7 +144,7 @@ export default function BooksAdminPane({ books, setBooks }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by title, author, or ISBN..."
-          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #FF7043', background: 'rgb(255, 245, 245)', marginRight: 16 }}
+          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #FF7043', background: 'white', marginRight: 16 }}
         />
         <Button
           style={{ fontWeight: 'bold', fontSize: '1.1rem', background: '#E64A19', color: '#fff' }}

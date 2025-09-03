@@ -138,7 +138,7 @@ export default function BookForm({ book, onChange, onSubmit, error, success, sub
       {error && <Message negative content={error} style={{ marginBottom: 16 }} />}
       {success && <Message positive content={success} style={{ marginBottom: 16 }} />}
       <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
-        <Button type="submit" color="violet" size="large" style={{ fontWeight: 'bold', fontSize: '1.1rem', flex: 1 }}>
+        <Button type="submit" size="large" style={{ fontWeight: 'bold', fontSize: '1.1rem', flex: 1, background:'#E64A19', color:'white' }}>
           {submitLabel}
         </Button>
         {onCancel && (

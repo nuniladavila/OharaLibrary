@@ -134,27 +134,26 @@ export default function BooksAdminPane({ books, setBooks }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by title, author, or ISBN..."
-          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #a084ca', background: '#f3e8ff', marginRight: 16 }}
+          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #FF7043', background: 'rgb(255, 245, 245)', marginRight: 16 }}
         />
         <Button
-          color='violet'
+          style={{ fontWeight: 'bold', fontSize: '1.1rem', background: '#E64A19', color: '#fff' }}
           icon='plus'
           content='Add Book'
           onClick={handleAdd}
-          style={{ fontWeight: 'bold', fontSize: '1.1rem' }}
         />
       </div>
       {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
       {success && <div style={{ color: 'green', marginBottom: 12 }}>{success}</div>}
       {!editMode && !addMode && (
-        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #a084ca22', padding: '1rem' }}>
+        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #FF704322', padding: '1rem' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: '#f3e8ff' }}>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Item</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Category</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Author</th>
-                <th style={{ textAlign: 'center', padding: '0.75rem', color: '#a084ca', fontWeight: 600 }}>Actions</th>
+              <tr style={{ background: 'rgb(255, 245, 245)' }}>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Item</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Category</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Author</th>
+                <th style={{ textAlign: 'center', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -166,7 +165,7 @@ export default function BooksAdminPane({ books, setBooks }) {
                       <img
                         src={book.thumbnail}
                         alt={book.BookTitle}
-                        style={{ width: 48, height: 64, objectFit: 'cover', borderRadius: 8, marginRight: 8, boxShadow: '0 2px 8px #a084ca22' }}
+                        style={{ width: 48, height: 64, objectFit: 'cover', borderRadius: 8, marginRight: 8, boxShadow: '0 2px 8px #FF704322' }}
                       />
                     ) : (
                       <div style={{ width: 48, height: 64, background: '#eee', borderRadius: 8, overflow: 'hidden', marginRight: 8 }} />
@@ -176,7 +175,7 @@ export default function BooksAdminPane({ books, setBooks }) {
                   <td style={{ padding: '0.75rem' }}>
                     {book.Category && Array.isArray(book.SubCategory)
                       ? book.SubCategory.map(cat => (
-                          <span key={cat} style={{ background: '#7c4dff', color: '#fff', borderRadius: 8, padding: '2px 8px', marginRight: 4, fontSize: 12, fontWeight: 500 }}>{cat}</span>
+                          <span key={cat} style={{ background: '#FF7043', color: '#fff', borderRadius: 8, padding: '2px 8px', marginRight: 4, fontSize: 12, fontWeight: 500 }}>{cat}</span>
                         ))
                       : null}
                   </td>
@@ -198,7 +197,7 @@ export default function BooksAdminPane({ books, setBooks }) {
         </div>
       )}
       {(editMode || addMode) && (
-        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #a084ca22', padding: '2rem', marginTop: 24 }}>
+  <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #FF704322', padding: '2rem', marginTop: 24 }}>
           {addMode && !addModeType && (
             <div style={{ marginBottom: 24 }}>
               <label style={{ fontWeight: 'bold', marginRight: 16 }}>Add Mode:</label>

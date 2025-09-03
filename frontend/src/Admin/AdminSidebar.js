@@ -6,15 +6,15 @@ export default function AdminSidebar() {
   const location = useLocation();
   return (
     <div style={{
-      width: 180,
-      background: '#7c4dff',
+      width: 200,
+      background: '#E64A19',
       color: '#fff',
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 32,
-      boxShadow: '2px 0 12px #a084ca22',
+      boxShadow: '2px 0 12px #FF704322',
     }}>
   <Link to="/">
     <img src={require('../../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%', cursor: 'pointer' }} />
@@ -34,8 +34,8 @@ function SidebarButton({ label, to, active, icon }) {
   return (
     <Link to={to} style={{
       width: '100%',
-      background: active ? '#fff' : 'transparent',
-      color: active ? '#7c4dff' : '#fff',
+      background: active ? 'rgb(255, 245, 245)' : 'transparent',
+      color: active ? '#FF7043' : '#fff',
       border: 'none',
       padding: '1rem 0',
       fontWeight: active ? 700 : 500,
@@ -47,7 +47,7 @@ function SidebarButton({ label, to, active, icon }) {
       gap: 8,
       borderRadius: 8,
       marginBottom: 8,
-      boxShadow: active ? '0 2px 8px #a084ca22' : undefined,
+      boxShadow: active ? '0 2px 8px #FF704322' : undefined,
       transition: 'background 0.2s, color 0.2s',
       textDecoration: 'none',
     }}>

@@ -113,6 +113,8 @@ function HomePage() {
         width: '100vw',
         height: '100vh',
         zIndex: 0,
+        midtoneColor: "#ff7043"
+
       }} />
       <div style={{
         minHeight: '100vh',
@@ -137,7 +139,22 @@ function HomePage() {
           }
         `}</style>
 
-        <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: "2rem", marginTop: "3rem"}}>
+        <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem', marginTop: '3rem' }}>
+          {/* <svg
+            width="400"
+            height="110"
+            viewBox="0 0 400 110"
+            style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%) scale(0.7)', zIndex: 0 }}
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M20,70 Q5,30 120,40 Q180,10 260,35 Q380,5 360,55 Q390,110 270,100 Q210,115 140,100 Q10,110 20,70 Z"
+              fill="#d1c4e9"
+              stroke="#b39ddb"
+              strokeWidth="2"
+            />
+          </svg> */}
           <span
             style={{
               ...COOL_FONTS['uncial-antiqua-regular'],

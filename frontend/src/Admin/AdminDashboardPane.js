@@ -24,10 +24,10 @@ export default function AdminDashboardPane({ books }) {
 
   return (
     <Segment basic style={{ padding: '3rem' }}>
-      <Header as='h1' color='violet' style={{ marginBottom: '0', fontWeight: 400 }}>
+      <Header as='h1' style={{ marginBottom: '0', fontWeight: 'bolder', color: '#E64A19', fontSize: '3rem' }}>
         Ohara Library Dashboard
       </Header>
-      <Header as='h3' color='grey' style={{ marginTop: '0', fontWeight: 400 }}>
+      <Header as='h3' style={{ marginTop: '0', fontWeight: 400, color: '#888' }}>
         {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
       </Header>
 
@@ -35,38 +35,38 @@ export default function AdminDashboardPane({ books }) {
       <Grid columns={4} stackable doubling style={{ marginBottom: '2.5rem' }}>
         <Grid.Row>
           <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #a084ca22', padding: '2rem' }}>
+            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #FF704322', padding: '2rem', background: '#fff' }}>
               <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: '#a084ca', fontWeight: 700 }}> {books.length} </Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: '#a084ca', fontWeight: 500 }}>Total Books</Card.Meta>
-                <Icon name="book" size="big" style={{ color: '#e57373', background: '#f3e8ff', borderRadius: '50%', padding: 12, marginTop: 12 }} />
+                <Card.Header style={{ fontSize: 36, color: '#FF7043', fontWeight: 700 }}> {books.length} </Card.Header>
+                <Card.Meta style={{ fontSize: 18, color: 'rgb(136, 136, 136)', fontWeight: 500 }}>Total Books</Card.Meta>
+                <Icon name="book" size="big" style={{ color: '#FF7043', background: '#fff3e0', borderRadius: '50%', padding: 12, marginTop: 12 }} />
               </Card.Content>
             </Card>
           </Grid.Column>
           <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #a084ca22', padding: '2rem' }}>
+            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #FF704322', padding: '2rem', background: '#fff' }}>
               <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: '#a084ca', fontWeight: 700 }}>{categoryCounts["Fiction"] || 0}</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: '#a084ca', fontWeight: 500 }}>Fiction Books</Card.Meta>
-                <Icon name="fly" size="big" style={{ color: '#e57373', background: '#f3e8ff', borderRadius: '50%', padding: 12, marginTop: 12 }} />
+                <Card.Header style={{ fontSize: 36, color: '#FF7043', fontWeight: 700 }}>{categoryCounts["Fiction"] || 0}</Card.Header>
+                <Card.Meta style={{ fontSize: 18, color: 'rgb(136, 136, 136)', fontWeight: 500 }}>Fiction Books</Card.Meta>
+                <Icon name="fly" size="big" style={{ color: '#FF7043', background: '#fff3e0', borderRadius: '50%', padding: 12, marginTop: 12 }} />
               </Card.Content>
             </Card>
           </Grid.Column>
           <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #a084ca22', padding: '2rem' }}>
+            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #FF704322', padding: '2rem', background: '#fff' }}>
               <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: '#a084ca', fontWeight: 700 }}>{categoryCounts["Non-Fiction"] || 0}</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: '#a084ca', fontWeight: 500 }}>Non-Fiction Books</Card.Meta>
-                <Icon name="lab" size="big" style={{ color: '#e57373', background: '#f3e8ff', borderRadius: '50%', padding: 12, marginTop: 12 }} />
+                <Card.Header style={{ fontSize: 36, color: '#FF7043', fontWeight: 700 }}>{categoryCounts["Non-Fiction"] || 0}</Card.Header>
+                <Card.Meta style={{ fontSize: 18, color: 'rgb(136, 136, 136)', fontWeight: 500 }}>Non-Fiction Books</Card.Meta>
+                <Icon name="lab" size="big" style={{ color: '#FF7043', background: '#fff3e0', borderRadius: '50%', padding: 12, marginTop: 12 }} />
               </Card.Content>
             </Card>
           </Grid.Column>
           <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #a084ca22', padding: '2rem' }}>
+            <Card fluid centered style={{ borderRadius: 18, boxShadow: '0 2px 12px #FF704322', padding: '2rem', background: '#fff' }}>
               <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: '#a084ca', fontWeight: 700 }}>42</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: '#a084ca', fontWeight: 500 }}>Borrowed Books</Card.Meta>
-                <Icon name="handshake" size="big" style={{ color: '#e57373', background: '#f3e8ff', borderRadius: '50%', padding: 12, marginTop: 12 }} />
+                <Card.Header style={{ fontSize: 36, color: '#FF7043', fontWeight: 700 }}>42</Card.Header>
+                <Card.Meta style={{ fontSize: 18, color: 'rgb(136, 136, 136)', fontWeight: 500 }}>Borrowed Books</Card.Meta>
+                <Icon name="handshake" size="big" style={{ color: '#FF7043', background: '#fff3e0', borderRadius: '50%', padding: 12, marginTop: 12 }} />
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -76,8 +76,8 @@ export default function AdminDashboardPane({ books }) {
       <Statistic.Group>
         {Object.entries(shelfLocationCounts).map(([shelfLoc, count]) => (
           <Statistic key={shelfLoc}>
-            <Statistic.Value>{count}</Statistic.Value>
-            <Statistic.Label>{shelfLoc} Books</Statistic.Label>
+            <Statistic.Value style={{ color: '#FF7043' }}>{count}</Statistic.Value>
+            <Statistic.Label style={{ color: 'rgb(136, 136, 136)'}}>{shelfLoc} Books</Statistic.Label>
           </Statistic>
         ))}
       </Statistic.Group>

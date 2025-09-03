@@ -14,7 +14,7 @@ export default function AdminSidebar() {
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 32,
-      boxShadow: '2px 0 12px #FF704322',
+      borderRadius: '0 10px 10px 0'
     }}>
   <Link to="/">
     <img src={require('../../assets/librarynicolilac.png')} alt="Ohara Library Logo" style={{ width: 100, height: 100, marginBottom: 24, borderRadius: '50%', cursor: 'pointer' }} />

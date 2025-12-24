@@ -1,16 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
-import WAVES from 'vanta/dist/vanta.waves.min';
-import FOG from 'vanta/dist/vanta.fog.min';
-import TRUNK from 'vanta/dist/vanta.trunk.min';
-import * as THREE from 'three';
-import p5 from 'p5';
+import React, { useEffect, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Input, Dropdown, Button, ButtonOr, Grid, Image, Card, Icon } from 'semantic-ui-react';
-// import BookShelf from './BookShelf';
+import { Input, Dropdown, Button, ButtonOr, Icon, Image } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/librarynicolilac.png';
 import { COLORS, COOL_FONTS } from './constants'; // Import your color constants
-import BookShelfItem from './BookShelfItem';
 
 
 function HomePage() {
@@ -19,49 +11,13 @@ function HomePage() {
   const [sortKey, setSortKey] = useState('ShelfLocation');
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
-  const vantaRef = useRef(null);
-  const vantaEffectRef = useRef(null);
 
   useEffect(() => {
+    // Keep fetching books in case other parts of the app rely on them (admin, counts, etc.)
     fetch('/api/books')
       .then(res => res.json())
-      .then(data => {
-        const withThumbnails = data.map(book => ({
-          ...book,
-          thumbnail: book.ImageLink,
-        }));
-        setBooks(withThumbnails);
-      })
-      .catch(error => {
-        console.error('Error fetching books:', error);
-      });
-  }, []);
-
-  // Vanta.js background setup
-  useEffect(() => {
-    if (!vantaEffectRef.current) {
-      vantaEffectRef.current = FOG({
-        el: vantaRef.current,
-        THREE,    
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        // highlightColor: 0xf2c443,
-        // midtoneColor: 0xcf4d43,
-        // lowlightColor: 0x6f63bb,
-        // baseColor: 0xf5e0e0,
-        speed: 1.50
-        // zoom: 0.85,
-      });
-    }
-    return () => {
-      if (vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
-        vantaEffectRef.current = null;
-      }
-    };
+      .then(data => setBooks(data || []))
+      .catch(error => console.error('Error fetching books:', error));
   }, []);
 
   const filteredBooks = Array.isArray(books) ? books.filter(book => {
@@ -73,10 +29,9 @@ function HomePage() {
     );
   }) : [];
 
-  // Sorting
+  // Sorting (kept for compatibility, results are not shown on homepage per design)
   const sortedBooks = [...filteredBooks].sort((a, b) => {
     if (sortKey === 'ShelfLocation') {
-      // Default: sort by shelf, then title
       const aShelf = a.ShelfLocation ?? '';
       const bShelf = b.ShelfLocation ?? '';
       const shelfCmp = sortOrder === 'asc' ? aShelf.localeCompare(bShelf) : bShelf.localeCompare(aShelf);
@@ -106,25 +61,17 @@ function HomePage() {
 
   return (
     <>
-      <div ref={vantaRef} style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 0,
-        midtoneColor: "#ff7043"
-
-      }} />
       <div style={{
         minHeight: '100vh',
         fontFamily: 'Georgia, serif',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center', // center vertically
         position: 'relative',
         overflow: 'hidden',
         zIndex: 1,
+        background: 'linear-gradient(180deg, #f7f9fc 0%, #eef2f7 100%)', // plain/soft background
       }}>
         {/* Admin icon */}
         <Icon link name='lemon' className="lemon-icon" onClick={handleAdminClick} style={{ position: "absolute", right: "1.25rem", top: "1.25rem", color:"white", zIndex: 2 }}/>
@@ -139,22 +86,7 @@ function HomePage() {
           }
         `}</style>
 
-        <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem', marginTop: '3rem' }}>
-          {/* <svg
-            width="900px"
-            height="200px"
-            viewBox="0 0 400 110"
-            style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%) scale(0.7)', zIndex: 0 }}
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M20,70 Q5,30 120,40 Q180,10 260,35 Q380,5 360,55 Q390,110 270,100 Q210,115 140,100 Q10,110 20,70 Z"
-              fill="#E64A19"
-              stroke="#E64A19"
-              strokeWidth="2"
-            />
-          </svg> */}
+  <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '0.25rem', marginTop: 0 }}>
           <span
             style={{
               ...COOL_FONTS['uncial-antiqua-regular'],
@@ -163,84 +95,113 @@ function HomePage() {
               fontWeight: 400,
               fontSize: '4.5rem',
               letterSpacing: 2,
-              display: 'inline-block',
-              minWidth: 220,
-              maxWidth: '100%',
+              display: 'flex',
+              lineHeight: 0.8,
               wordBreak: 'break-word',
               textAlign: 'center',
               position: 'relative',
               zIndex: 1,
               background: 'none',
               boxShadow: 'none',
-              padding: '1.5rem 3rem',
+              marginTop: '1rem'
             }}
           >
             Ohara Library
           </span>
         </div>
-        
-        {/* Responsive controls */}
-        <div
-          style={{
-            width: '100%',
+        {/* Centered search + filters card */}
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '1rem',
+        }}>
+          <div style={{
+            width: 'min(900px, 95%)',
             display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
             justifyContent: 'center',
-            gap: 16,
-            marginTop: '2rem',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Input
-            icon={<Icon name='search'/>}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by title, author, or year..."
-            style={{ minWidth: 180, maxWidth: 320, flex: '1 1 180px' }}
-          />
-          <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Dropdown
-              selection
-              value={sortKey}
-              onChange={(e, { value }) => setSortKey(value)}
-              options={[
-                { key: 'BookTitle', value: 'BookTitle', text: 'Title' },
-                { key: 'Author', value: 'Author', text: 'Author' },
-                { key: 'PublishedDate', value: 'PublishedDate', text: 'Published Date' },
-                { key: 'Category', value: 'Category', text: 'Category' },
-                { key: 'ShelfLocation', value: 'ShelfLocation', text: 'Shelf Location' },
-                { key: 'ISBN', value: 'ISBN', text: 'ISBN' },
-                { key: 'Language', value: 'Language', text: 'Language' },
-                { key: 'Publisher', value: 'Publisher', text: 'Publisher' },
-                { key: 'Edition', value: 'Edition', text: 'Edition' },
-                { key: 'Read', value: 'Read', text: 'Read' },
-                { key: 'DateAdded', value: 'DateAdded', text: 'Date Added' },
-                { key: 'DateAcquired', value: 'DateAcquired', text: 'Date Acquired' },
-                { key: 'SubCategory', value: 'SubCategory', text: 'Subcategory' },
-                { key: 'Editor', value: 'Editor', text: 'Editor' },
-              ]}
-              style={{ marginLeft: 8, minWidth: 120, maxWidth: 180 }}
-            />
-            <Button.Group size="small" style={{ marginLeft: 4 }}>
-              <Button
-                active={sortOrder === 'asc'}
-                color={sortOrder === 'asc' ? 'purple' : null}
-                onClick={() => setSortOrder('asc')}
-              >
-                asc
-              </Button>
-              <ButtonOr />
-              <Button
-                active={sortOrder === 'desc'}
-                color={sortOrder === 'desc' ? 'purple' : null}
-                onClick={() => setSortOrder('desc')}
-              >
-                desc
-              </Button>
-            </Button.Group>
+            alignItems: 'center',
+          }}>
+            <div style={{
+              width: '100%',
+              padding: '0.75rem 1rem',
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.85)',
+              boxShadow: '0 6px 24px rgba(36,37,38,0.12)',
+              display: 'flex',
+              gap: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <Input
+                icon={<Icon name='search'/>}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search by title, author, or year..."
+                style={{ minWidth: 240, maxWidth: 520, flex: '1 1 320px' }}
+              />
+              <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Dropdown
+                  selection
+                  value={sortKey}
+                  onChange={(e, { value }) => setSortKey(value)}
+                  options={[
+                    { key: 'BookTitle', value: 'BookTitle', text: 'Title' },
+                    { key: 'Author', value: 'Author', text: 'Author' },
+                    { key: 'PublishedDate', value: 'PublishedDate', text: 'Published Date' },
+                    { key: 'Category', value: 'Category', text: 'Category' },
+                    { key: 'ShelfLocation', value: 'ShelfLocation', text: 'Shelf Location' },
+                  ]}
+                  style={{ marginLeft: 8, minWidth: 120, maxWidth: 180 }}
+                />
+                <Button.Group size="small" style={{ marginLeft: 4 }}>
+                  <Button
+                    active={sortOrder === 'asc'}
+                    color={sortOrder === 'asc' ? 'purple' : null}
+                    onClick={() => setSortOrder('asc')}
+                  >
+                    asc
+                  </Button>
+                  <ButtonOr />
+                  <Button
+                    active={sortOrder === 'desc'}
+                    color={sortOrder === 'desc' ? 'purple' : null}
+                    onClick={() => setSortOrder('desc')}
+                  >
+                    desc
+                  </Button>
+                </Button.Group>
+              </div>
+            </div>
           </div>
         </div>
+        {/* Total book count statistic below the search bar */}
+          <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '1rem', fontWeight: 600, color: COLORS.headerText }}>
+            Total Books: {books.length}
+          </div>
+
+          {/* Live search results: show thumbnails when user types */}
+          {search && search.trim().length > 0 && (
+            <div style={{ width: '100%', marginTop: '0.75rem', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ width: 'min(1000px, 95%)', display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                {sortedBooks.length > 0 ? (
+                  sortedBooks.map(book => (
+                    <div key={book.Id ?? book.id ?? book.ISBN ?? Math.random()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 100 }}>
+                      <Image
+                        src={book.ImageLink || book.thumbnail || `https://placehold.co/110x170?text=${encodeURIComponent(book.BookTitle || 'Book')}`}
+                        style={{ width: 100, height: 150, borderRadius: 4, objectFit: 'cover' }}
+                        alt={book.BookTitle}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ color: COLORS.headerText, fontSize: '1rem', marginTop: '0.5rem', fontWeight: 600 }}>No books found.</div>
+                )}
+              </div>
+            </div>
+          )}
         <style>{`
           @media (max-width: 600px) {
             .hide-on-mobile {
@@ -249,27 +210,6 @@ function HomePage() {
           }
         `}</style>
           
-        {/* Total book count statistic */}
-        <div style={{ textAlign: 'center', margin: '1rem 0', fontSize: '1.3rem', fontWeight: 600, color: COLORS.headerText }}>
-          Total Books: {books.length}
-        </div>
-        {/* Book images grid */}
-        <div style={{ width: '100%', margin: '1rem 0', display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center' }}>
-          {sortedBooks.length > 0 ? (
-            <>
-              {sortedBooks.map(book => (
-                <Image 
-                  key={book.Id}
-                  src={book.thumbnail ? book.thumbnail : `https://placehold.co/110x170?text=${encodeURIComponent(book.BookTitle)}`}
-                  style={{ width: 100, height: 150, borderRadius: 4 }} 
-                />
-              ))}
-            </>
-          ) : (
-            <div style={{ color: COLORS.headerText, fontSize: '1.2rem', marginTop: '2rem', fontWeight: 'bold', textShadow: '1px 1px 6px #e0c3fc' }}>No books found.</div>
-          )}
-        </div>
-        {/* Animations */}
         <style>{`
           @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
           .book-cover { transition: transform 0.2s; }

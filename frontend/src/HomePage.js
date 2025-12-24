@@ -141,8 +141,8 @@ function HomePage() {
 
         <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem', marginTop: '3rem' }}>
           {/* <svg
-            width="400"
-            height="110"
+            width="900px"
+            height="200px"
             viewBox="0 0 400 110"
             style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%) scale(0.7)', zIndex: 0 }}
             xmlns="http://www.w3.org/2000/svg"
@@ -150,8 +150,8 @@ function HomePage() {
           >
             <path
               d="M20,70 Q5,30 120,40 Q180,10 260,35 Q380,5 360,55 Q390,110 270,100 Q210,115 140,100 Q10,110 20,70 Z"
-              fill="#d1c4e9"
-              stroke="#b39ddb"
+              fill="#E64A19"
+              stroke="#E64A19"
               strokeWidth="2"
             />
           </svg> */}
@@ -161,8 +161,8 @@ function HomePage() {
               fontSize: '3.2rem',
               color: COLORS.headerText,
               fontWeight: 400,
+              fontSize: '4.5rem',
               letterSpacing: 2,
-              padding: '0.5rem 2.5rem',
               display: 'inline-block',
               minWidth: 220,
               maxWidth: '100%',
@@ -171,8 +171,8 @@ function HomePage() {
               position: 'relative',
               zIndex: 1,
               background: 'none',
-              border: 'none',
               boxShadow: 'none',
+              padding: '1.5rem 3rem',
             }}
           >
             Ohara Library

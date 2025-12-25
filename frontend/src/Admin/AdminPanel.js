@@ -26,7 +26,7 @@ function AdminPanel() {
     return (
       <div style={{ display: 'flex', minHeight: '100vh', background: 'rgb(255, 245, 245)'}}>
         <AdminSidebar />
-        <div style={{ flex: 1, minHeight: '100vh', background:'rgb(255, 245, 245)', overflow: 'auto' }}>
+        <div style={{ flex: 1, minHeight: '100vh', background:'rgb(255, 245, 245)' }}>
           <Routes>
             <Route path="dashboard" element={<AdminDashboardPane books={books} />} />
             <Route path="books" element={<BooksAdminPane books={books} setBooks={setBooks} />} />

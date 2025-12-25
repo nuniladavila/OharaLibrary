@@ -1,15 +1,17 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import { Link, useLocation } from 'react-router-dom';
+import { COLORS } from '../constants';
 
 export default function AdminSidebar() {
   const location = useLocation();
   return (
     <div style={{
       width: 200,
-      background: '#E64A19',
+      background: COLORS.darkerAccent,
       color: '#fff',
-      minHeight: '100vh',
+      // height: '100vh',
+      // position: 'fixed; left:0;top:0;',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -35,7 +37,7 @@ function SidebarButton({ label, to, active, icon }) {
     <Link to={to} style={{
       width: '100%',
       background: active ? 'white' : 'transparent',
-      color: active ? '#FF7043' : '#fff',
+      color: active ? COLORS.accentColor : '#fff',
       border: 'none',
       padding: '1rem 0',
       fontWeight: active ? 700 : 500,

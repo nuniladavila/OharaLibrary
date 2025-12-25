@@ -14,8 +14,8 @@ const EMPTY_BOOK = {
   DateAcquired: ''
 };
 import BookForm from './BookForm';
-import BookSearchList from './BookSearchList';
 import { Icon, Button, ButtonGroup, Pagination } from 'semantic-ui-react';
+import { COLORS } from '../constants';
 
 
 export default function BooksAdminPane({ books, setBooks }) {
@@ -144,10 +144,10 @@ export default function BooksAdminPane({ books, setBooks }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by title, author, or ISBN..."
-          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: '1px solid #FF7043', background: 'white', marginRight: 16 }}
+          style={{ flex: 1, padding: '0.75rem', borderRadius: 8, border: `1px solid ${COLORS.accentColor}`, background: 'white', marginRight: 16 }}
         />
         <Button
-          style={{ fontWeight: 'bold', fontSize: '1.1rem', background: '#E64A19', color: '#fff' }}
+          style={{ fontWeight: 'bold', fontSize: '1.1rem', background: COLORS.accentColor, color: '#fff' }}
           icon='plus'
           content='Add Book'
           onClick={handleAdd}
@@ -159,11 +159,11 @@ export default function BooksAdminPane({ books, setBooks }) {
         <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #FF704322', padding: '1rem' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: 'rgb(255, 245, 245)' }}>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Item</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Category</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Author</th>
-                <th style={{ textAlign: 'center', padding: '0.75rem', color: '#FF7043', fontWeight: 600 }}>Actions</th>
+              <tr style={{ background: 'rgb(255, 245, 245' }}>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: COLORS.accentColor, fontWeight: 600 }}>Item</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: COLORS.accentColor, fontWeight: 600 }}>Category</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem', color: COLORS.accentColor, fontWeight: 600 }}>Author</th>
+                <th style={{ textAlign: 'center', padding: '0.75rem', color: COLORS.accentColor, fontWeight: 600 }}>Actions</th>
               </tr>
             </thead>
             <tbody>

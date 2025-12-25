@@ -1,8 +1,6 @@
 export const COLORS = {
-  background: 'linear-gradient(90deg, #f3e8ff 0%, #e0c3fc 100%)', // lilac to light purple
   shelf: '#a084ca', // lilac purple
   bookBg: '#f8f0fc', // very light purple
-  headerText: 'white', // deep lilac
   //headerText: '#7c3f99', // deep lilac
   nav: '#b39ddb', // soft purple
   navText: '#a084ca',
@@ -11,6 +9,10 @@ export const COLORS = {
   genreBg: '#a084ca',
   genreText: '#fff',
   bookshelfColorWood: '#63471dff', // warm wood color
+  accentColor: 'rgb(255, 112, 67)',// brigther orange 
+  darkerAccent: 'rgb(230, 74, 25)', //dark orange
+  background: 'rgb(255, 245, 245)', //yellowish background
+  subtitle: '#888', //gris subtitle
 };
 
 export const BOOK_SHELF_CONSTANTS = {

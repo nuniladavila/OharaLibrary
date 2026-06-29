@@ -1,8 +1,6 @@
 export const COLORS = {
-  background: 'linear-gradient(90deg, #f3e8ff 0%, #e0c3fc 100%)', // lilac to light purple
   shelf: '#a084ca', // lilac purple
   bookBg: '#f8f0fc', // very light purple
-  headerText: 'white', // deep lilac
   //headerText: '#7c3f99', // deep lilac
   nav: '#b39ddb', // soft purple
   navText: '#a084ca',
@@ -11,13 +9,46 @@ export const COLORS = {
   genreBg: '#a084ca',
   genreText: '#fff',
   bookshelfColorWood: '#63471dff', // warm wood color
+  accentColor: '#FF542A', // terracotta (rgb(255,84,42))
+  darkerAccent: '#a43a18', // deeper terracotta
+  background: 'white', //background
+  subtitle: '#888', //gris subtitle
 };
 
-export const BOOK_SHELF_CONSTANTS = {
-  coverWidth: 110,
-  coverHeight: 170,
-  sideBorderWidth: 16,
-  topBottomBorderWidth: 28,
+export const DARK_COLORS = {
+  background: 'linear-gradient(180deg, #0b1b2b 0%, #14263a 50%, #2b2340 100%)', // twilight gradient
+  pageSurface: '#0f1418', // slightly lighter for surfaces
+  panel: 'rgba(255,255,255,0.04)', // translucent panel on dark
+  text: '#e6eef6', // light text
+  subtitle: '#98a1ab', // muted subtitle on dark
+  shelf: '#6b4fbb',
+  bookBg: '#0c1114',
+  accentColor: '#FF542A', // terracotta (rgb(255,84,42))
+  darkerAccent: '#a43a18',
+  admin: {
+    pageBackground: '#191919',
+    sidebarBackground: '#202020',
+    headerBackground: '#252525',
+    cardBackground: '#2f2f2f',
+    inputBackground: '#1f1f1f',
+    border: '#333333',
+    borderStrong: '#3a3a3a',
+    text: '#f5f5f5',
+    textMuted: '#d1d5db',
+    textSoft: '#9b9b9b',
+    textSubtle: '#8a8a8a',
+    textDim: '#b3b3b3',
+    buttonBackground: '#2f2f2f',
+    buttonText: '#ffffff',
+    secondaryBackground: '#1f1f1f',
+    secondaryText: '#d1d5db',
+    successBackground: '#ecfdf3',
+    successText: '#166534',
+    successBorder: '#a7f3d0',
+    errorBackground: '#fef2f2',
+    errorText: '#b91c1c',
+    errorBorder: '#fecaca',
+  },
 };
 
 export const COOL_FONTS = {

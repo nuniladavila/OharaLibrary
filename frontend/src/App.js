@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HomePage from './HomePage';
 import AdminPanel from './Admin/AdminPanel';
+import HomePageAlt from './HomePageAlt';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<HomePageAlt />} />
       <Route path="/admin-panel/*" element={<AdminPanel />} />
     </Routes>
   );

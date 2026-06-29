@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Input, Dropdown, Button, ButtonOr, Icon, Image } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
-import { COLORS, COOL_FONTS } from './constants'; // Import your color constants
+import { COLORS, DARK_COLORS, COOL_FONTS } from './constants'; // Import your color constants and dark theme
 
 
 function HomePage() {
@@ -71,7 +71,8 @@ function HomePage() {
         position: 'relative',
         overflow: 'hidden',
         zIndex: 1,
-        background: COLORS.background
+        background: DARK_COLORS.background,
+        color: DARK_COLORS.text,
       }}>
         {/* Absolutely centered box, animates upward when searching */}
         <div
@@ -115,16 +116,17 @@ function HomePage() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '1rem',
+            padding: '2rem 1rem 1rem 1rem',
           }}>
             <div style={{ width: 'min(900px, 95%)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 12, background: 'rgba(255,255,255,0.85)', boxShadow: '0 6px 24px rgba(36,37,38,0.12)', display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 12, background: '#fbfbfa', border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 8px 30px rgba(2,6,23,0.08)', display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Input
-                  icon={<Icon name='search'/>}
+                  icon={<Icon name='search' style={{ color: COLORS.accentColor }} />}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search by title, author, or year..."
                   style={{ minWidth: 240, maxWidth: 520, flex: '1 1 320px' }}
+                  input={{ style: { background: '#ffffff', color: '#111827', border: '1px solid rgba(0,0,0,0.12)', boxShadow: 'none', padding: '0.5rem 0.75rem' } }}
                 />
                 <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Dropdown
@@ -156,7 +158,7 @@ function HomePage() {
             </div>
           </div>
           {/* Total book count statistic below the search bar */}
-          <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '1rem', fontWeight: 600, color: COLORS.accentColor }}>
+          <div style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 600, color: COLORS.accentColor }}>
             Total Books: {books.length}
           </div>
         </div>

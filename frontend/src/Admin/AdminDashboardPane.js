@@ -1,88 +1,109 @@
 import React, { useEffect, useState } from 'react';
-import { Statistic, Header, Segment, Icon, Card, Grid } from 'semantic-ui-react';
-import { COLORS } from '../constants';
+import { Link } from 'react-router-dom';
+import { COLORS, DARK_COLORS } from '../constants';
+
 
 export default function AdminDashboardPane({ books }) {
+  const adminTheme = DARK_COLORS.admin;
   const [categoryCounts, setCategoryCounts] = useState({});
   const [shelfLocationCounts, setShelfLocationCounts] = useState({});
 
   useEffect(() => {
     const catCounts = {};
     const shelfCounts = {};
+
     books.forEach(book => {
-      // Category count
       if (typeof book.Category === 'string' && book.Category.trim()) {
         catCounts[book.Category] = (catCounts[book.Category] || 0) + 1;
       }
-      // Shelf location count
       if (typeof book.ShelfLocation === 'string' && book.ShelfLocation.trim()) {
         shelfCounts[book.ShelfLocation] = (shelfCounts[book.ShelfLocation] || 0) + 1;
       }
     });
+
     setCategoryCounts(catCounts);
     setShelfLocationCounts(shelfCounts);
   }, [books]);
 
+  const categoryEntries = Object.entries(categoryCounts).slice(0, 4);
+  const shelfEntries = Object.entries(shelfLocationCounts).slice(0, 4);
+  const readCount = books.filter(book => book.Read === true || book.Read === 1 || book.Read === '1').length;
+  const readPercentage = books.length ? Math.round((readCount / books.length) * 100) : 0;
+
   return (
-  <Segment basic style={{ padding: '3rem', background: COLORS.background }}>
-  <Header as='h1' style={{ marginBottom: '0', fontWeight: 'bolder', color: COLORS.darkerAccent, fontSize: '3rem' }}>
-        Ohara Library Dashboard
-      </Header>
-  <Header as='h3' style={{ marginTop: '0', fontWeight: 400, color: COLORS.subtitle }}>
-        {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-      </Header>
+    <div style={{ display: 'grid', gap: '20px', marginTop: '4px' }}>
+      <section style={panelStyle}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+          <div>
+            <div style={{ fontSize: '12px', letterSpacing: '0.16em', textTransform: 'uppercase', color: adminTheme.textDim }}>Overview</div>
+            <h2 style={{ margin: '4px 0 0', fontSize: '24px', color: adminTheme.text }}>Dashboard</h2>
+          </div>
+          <Link to="/admin-panel/add-book" style={primaryButtonStyle}>＋ Add book</Link>
+        </div>
 
-      {/* Card Row */}
-      <Grid columns={4} stackable doubling style={{ marginBottom: '2.5rem' }}>
-        <Grid.Row>
-          <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: 'rgba(255, 112, 67, 0.133) 0px 2px 12px', padding: '2rem', background: 'white' }}>
-              <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: COLORS.accentColor, fontWeight: 700 }}> {books.length} </Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: COLORS.subtitle, fontWeight: 500 }}>Total Books</Card.Meta>
-                <Icon name="book" size="big" style={{ color: COLORS.accentColor, background: COLORS.background, borderRadius: '50%', padding: 12, marginTop: 12 }} />
-              </Card.Content>
-            </Card>
-          </Grid.Column>
-          <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: 'rgba(255, 112, 67, 0.133) 0px 2px 12px', padding: '2rem', background: 'white' }}>
-              <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: COLORS.accentColor, fontWeight: 700 }}>{categoryCounts["Fiction"] || 0}</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: COLORS.subtitle, fontWeight: 500 }}>Fiction Books</Card.Meta>
-                <Icon name="fly" size="big" style={{ color: COLORS.accentColor, background: COLORS.background, borderRadius: '50%', padding: 12, marginTop: 12 }} />
-              </Card.Content>
-            </Card>
-          </Grid.Column>
-          <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: 'rgba(255, 112, 67, 0.133) 0px 2px 12px', padding: '2rem', background: 'white' }}>
-              <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: COLORS.accentColor, fontWeight: 700 }}>{categoryCounts["Non-Fiction"] || 0}</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: COLORS.subtitle, fontWeight: 500 }}>Non-Fiction Books</Card.Meta>
-                <Icon name="lab" size="big" style={{ color: COLORS.accentColor, background: COLORS.background, borderRadius: '50%', padding: 12, marginTop: 12 }} />
-              </Card.Content>
-            </Card>
-          </Grid.Column>
-          <Grid.Column>
-            <Card fluid centered style={{ borderRadius: 18, boxShadow: 'rgba(255, 112, 67, 0.133) 0px 2px 12px', padding: '2rem', background: 'white' }}>
-              <Card.Content textAlign='center'>
-                <Card.Header style={{ fontSize: 36, color: COLORS.accentColor, fontWeight: 700 }}>42</Card.Header>
-                <Card.Meta style={{ fontSize: 18, color: COLORS.subtitle, fontWeight: 500 }}>Borrowed Books</Card.Meta>
-                <Icon name="handshake" size="big" style={{ color: COLORS.accentColor, background: COLORS.background, borderRadius: '50%', padding: 12, marginTop: 12 }} />
-              </Card.Content>
-            </Card>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+          <MetricCard label="Total books" value={books.length} icon="📚" adminTheme={adminTheme} />
+          <MetricCard label="Categories" value={categoryEntries.length} icon="🗂️" adminTheme={adminTheme} />
+          <MetricCard label="Shelf zones" value={shelfEntries.length} icon="🧺" adminTheme={adminTheme} />
+          <MetricCard label="Books read" value={`${readPercentage}%`} icon="✓" adminTheme={adminTheme} />
+        </div>
+      </section>
 
-      <Statistic.Group>
-        {Object.entries(shelfLocationCounts).map(([shelfLoc, count]) => (
-          <Statistic key={shelfLoc}>
-            <Statistic.Value style={{ color: COLORS.accentColor }}>{count}</Statistic.Value>
-            <Statistic.Label style={{ color: COLORS.subtitle }}>{shelfLoc} Books</Statistic.Label>
-          </Statistic>
-        ))}
-      </Statistic.Group>
-    </Segment>
+      <section style={{ display: 'grid', gap: '20px', gridTemplateColumns: '1.2fr 0.8fr' }}>
+        <div style={panelStyle}>
+          <h3 style={{ margin: '0 0 12px', color: adminTheme.text }}>By category</h3>
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {categoryEntries.length === 0 ? (
+              <div style={{ color: adminTheme.textSoft }}>No categories recorded yet.</div>
+            ) : (
+              categoryEntries.map(([name, count]) => (
+                <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: adminTheme.cardBackground, borderRadius: '10px' }}>
+                  <span style={{ color: adminTheme.text, fontWeight: 600 }}>{name}</span>
+                  <span style={{ color: adminTheme.textMuted }}>{count} books</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div style={panelStyle}>
+          <h3 style={{ margin: '0 0 12px', color: adminTheme.text }}>Quick flow</h3>
+          <ul style={{ margin: 0, paddingLeft: '18px', color: adminTheme.textMuted, lineHeight: 1.7 }}>
+            <li>Start with the ISBN and batch metadata.</li>
+            <li>If the lookup misses, the form expands for manual entry.</li>
+            <li>Keep your shelves organized by category and location.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
   );
 }
+
+function MetricCard({ label, value, icon, adminTheme }) {
+  return (
+    <div style={{ background: adminTheme.cardBackground, border: `1px solid ${adminTheme.borderStrong}`, borderRadius: '14px', padding: '16px 14px' }}>
+      <div style={{ fontSize: '24px', marginBottom: '8px' }}>{icon}</div>
+      <div style={{ fontSize: '24px', fontWeight: 700, color: adminTheme.text }}>{value}</div>
+      <div style={{ fontSize: '13px', color: adminTheme.textSoft }}>{label}</div>
+    </div>
+  );
+}
+
+const panelStyle = {
+  background: DARK_COLORS.admin.headerBackground,
+  border: `1px solid ${DARK_COLORS.admin.border}`,
+  borderRadius: '18px',
+  padding: '18px 20px',
+  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+};
+
+const primaryButtonStyle = {
+  textDecoration: 'none',
+  background: COLORS.accentColor,
+  color: '#ffffff',
+  padding: '9px 14px',
+  borderRadius: '999px',
+  fontWeight: 700,
+  fontSize: '14px',
+};
 
